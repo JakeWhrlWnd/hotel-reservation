@@ -1,6 +1,6 @@
 /** The Enumeration defines the room type of Single or Double.
  *
- * @James Norris
+ * @JamesNorris
  *
  */
 package model;
