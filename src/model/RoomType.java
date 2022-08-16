@@ -5,6 +5,4 @@
  */
 package model;
 
-public enum RoomType {
-    SINGLE, DOUBLE
-}
+public enum RoomType { SINGLE, DOUBLE }
