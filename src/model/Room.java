@@ -1,10 +1,9 @@
+package model;
 /** This creates the Room class.
  *
- * @JamesNorris
+ * @author James Norris
  *
  */
-package model;
-
 public class Room implements IRoom{
 
     private String roomNumber;

@@ -1,9 +1,8 @@
+package model;
 /** Tester for the models of the application.
  *
  * @author James Norris
  */
-package model;
-
 public class Driver {
 
     public static void main(String[] args) {

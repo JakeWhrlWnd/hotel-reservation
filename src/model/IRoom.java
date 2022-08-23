@@ -1,10 +1,9 @@
+package model;
 /** The IRoom interface creates the abstract methods for the reservation app.
  *
- * @JamesNorris
+ * @author James Norris
  *
  */
-package model;
-
 public interface IRoom {
     public String getRoomNumber();
     public Double getRoomPrice();

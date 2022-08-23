@@ -1,8 +1,7 @@
+package model;
 /** The Enumeration defines the room type of Single or Double.
  *
- * @JamesNorris
+ * @author James Norris
  *
  */
-package model;
-
 public enum RoomType { SINGLE, DOUBLE }

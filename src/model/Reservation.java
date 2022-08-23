@@ -1,10 +1,9 @@
+package model;
 /** Creates the Reservation class. Defines the customer, room, and reservation dates.
  *
- * @JamesNorris
+ * @author James Norris
  *
  */
-package model;
-
 import java.util.Date;
 
 public class Reservation {

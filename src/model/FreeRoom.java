@@ -1,10 +1,9 @@
+package model;
 /** This creates the FreeRoom class. It extends the Room class and overrides the price.
  *
- * @JamesNorris
+ * @author James Norris
  *
  */
-package model;
-
 public class FreeRoom extends Room {
 
     public FreeRoom(String roomNumber, Double price, RoomType enumeration) {

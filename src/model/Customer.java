@@ -1,11 +1,10 @@
+package model;
 /** Creates the Customer class. Defines the first name, last name, and email.
  *  Uses a Regex to test for a valid email.
  *
- * @JamesNorris
+ * @author James Norris
  *
  */
-package model;
-
 import java.util.regex.Pattern;
 
 public class Customer {
