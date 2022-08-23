@@ -15,12 +15,19 @@ public class Customer {
     private String email;
 
     private final String emailRegex = "^(.+)@(.+).(.+)$";
-    private final Pattern emailPattern = Pattern.compile(emailRegex);
+    private final Pattern pattern = Pattern.compile(emailRegex);
 
     public Customer(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        try {
+            if (pattern.matcher(email).matches()) {
+                this.email = email;
+            }
+        }
+        catch (Exception e){
+            throw new IllegalArgumentException("Invalid email format.");
+        }
     }
 
     public String getFirstName() {
@@ -44,13 +51,7 @@ public class Customer {
     }
 
     public void setEmail(String email) {
-        try{
-            emailPattern.matcher(email);
-            this.email = email;
-        }
-        catch(Exception e) {
-            throw new IllegalArgumentException("This is not a valid email.");
-        }
+        this.email = email;
     }
 
     @Override
