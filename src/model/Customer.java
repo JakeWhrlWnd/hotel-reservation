@@ -14,8 +14,8 @@ public class Customer {
     private String lastName;
     private String email;
 
-    private String emailRegex = "^(.+)@(.+).(.+)$";
-    private Pattern emailPattern = Pattern.compile(emailRegex);
+    private final String emailRegex = "^(.+)@(.+).(.+)$";
+    private final Pattern emailPattern = Pattern.compile(emailRegex);
 
     public Customer(String firstName, String lastName, String email) {
         this.firstName = firstName;
@@ -44,6 +44,19 @@ public class Customer {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        try{
+            emailPattern.matcher(email);
+            this.email = email;
+        }
+        catch(Exception e) {
+            throw new IllegalArgumentException("This is not a valid email.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "First Name: " + firstName
+                + "\nLast Name: " + lastName
+                + "\nEmail: " + email;
     }
 }
