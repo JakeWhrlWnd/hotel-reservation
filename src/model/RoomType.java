@@ -1,7 +1,18 @@
 package model;
-/** The Enumeration defines the room type of Single or Double.
+/**
+ * Room types that are offered
+ * {@link #SINGLE}
+ * {@link #DOUBLE}
  *
  * @author James Norris
- *
  */
-public enum RoomType { SINGLE, DOUBLE }
+public enum RoomType {
+    /**
+     * Single room
+     */
+    SINGLE,
+    /**
+     * Double room
+     */
+    DOUBLE
+}
