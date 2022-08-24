@@ -1,21 +1,31 @@
 package model;
-/** This creates the Room class.
- *
+/**
+ * Creates the Room class.
+ * This class is used to implement the IRoom Interface.
  * @author James Norris
- *
  */
 public class Room implements IRoom{
-
     private String roomNumber;
     private Double price;
     private RoomType enumeration;
 
+    /**
+     * Constructor for Room Class
+     * @param roomNumber the hotel room number
+     * @param price the hotel room price
+     * @param enumeration the hotel room type - SINGLE or DOUBLE
+     */
     public Room(String roomNumber, Double price, RoomType enumeration) {
         this.roomNumber = roomNumber;
         this.price = price;
         this.enumeration = enumeration;
     }
 
+    /**
+     * Overrides the getRoomNumber method declared by the IRoom interface
+     *
+     * @return The hotel room number
+     */
     @Override
     public String getRoomNumber() {
         return roomNumber;
@@ -25,6 +35,10 @@ public class Room implements IRoom{
         this.roomNumber = roomNumber;
     }
 
+    /**
+     * Overrides the getRoomPrice method declared by the IRoom interface
+     * @return The hotel room price
+     */
     @Override
     public Double getRoomPrice() {
         return price;
@@ -34,6 +48,10 @@ public class Room implements IRoom{
         this.price = price;
     }
 
+    /**
+     * Overrides the getRoomType method declared by the IRoom interface
+     * @return The hotel room type - either SINGLE or DOUBLE
+     */
     @Override
     public RoomType getRoomType() {
         return enumeration;
@@ -43,6 +61,10 @@ public class Room implements IRoom{
         this.enumeration = enumeration;
     }
 
+    /**
+     * Overrides the isFree method declared by the IRoom interface
+     * @return False when the room has a price
+     */
     @Override
     public boolean isFree() {
         return false;
@@ -50,8 +72,8 @@ public class Room implements IRoom{
 
     @Override
     public String toString() {
-        return "Room: " + roomNumber
-                + "\nPrice: $" + price
-                + "\nRoom Type: " + enumeration;
+        return "Room number: " + roomNumber
+                + "\n Room price: $" + price
+                + "\n Room type: " + enumeration;
     }
 }
