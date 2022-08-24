@@ -1,12 +1,37 @@
 package model;
-/** The IRoom interface creates the abstract methods for the reservation app.
+/**
+ * IRoom interface
+ * Groups the methods needed to be implemented by the Room Class
+ * {@link #getRoomNumber()}
+ * {@link #getRoomPrice()}
+ * {@link #getRoomType()}
+ * {@link #isFree()}
  *
  * @author James Norris
- *
  */
 public interface IRoom {
-    public String getRoomNumber();
-    public Double getRoomPrice();
-    public RoomType getRoomType();
-    public boolean isFree();
+    /**
+     *
+     * @return the room number
+     */
+    String getRoomNumber();
+
+    /**
+     *
+     * @return the room price
+     */
+    Double getRoomPrice();
+
+    /**
+     *
+     * @return the room type
+     */
+    RoomType getRoomType();
+
+    /**
+     *
+     * @return whether the room is free
+     */
+    boolean isFree();
 }
+
