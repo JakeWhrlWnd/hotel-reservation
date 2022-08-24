@@ -1,6 +1,6 @@
 package model;
 /**
- * Creates the Room class.
+ * Creates the Room Class.
  * This class is used to implement the IRoom Interface.
  * @author James Norris
  */
@@ -11,9 +11,9 @@ public class Room implements IRoom{
 
     /**
      * Constructor for Room Class
-     * @param roomNumber the hotel room number
-     * @param price the hotel room price
-     * @param enumeration the hotel room type - SINGLE or DOUBLE
+     * @param roomNumber string, the hotel room number
+     * @param price double, the hotel room price
+     * @param enumeration string, the hotel room type - SINGLE or DOUBLE
      */
     public Room(String roomNumber, Double price, RoomType enumeration) {
         this.roomNumber = roomNumber;
@@ -22,7 +22,7 @@ public class Room implements IRoom{
     }
 
     /**
-     * Overrides the getRoomNumber method declared by the IRoom interface
+     * Overrides the getRoomNumber method declared by the IRoom Interface
      *
      * @return The hotel room number
      */
@@ -36,7 +36,7 @@ public class Room implements IRoom{
     }
 
     /**
-     * Overrides the getRoomPrice method declared by the IRoom interface
+     * Overrides the getRoomPrice method declared by the IRoom Interface
      * @return The hotel room price
      */
     @Override
@@ -49,7 +49,7 @@ public class Room implements IRoom{
     }
 
     /**
-     * Overrides the getRoomType method declared by the IRoom interface
+     * Overrides the getRoomType method declared by the IRoom Interface
      * @return The hotel room type - either SINGLE or DOUBLE
      */
     @Override
@@ -62,7 +62,7 @@ public class Room implements IRoom{
     }
 
     /**
-     * Overrides the isFree method declared by the IRoom interface
+     * Overrides the isFree method declared by the IRoom Interface
      * @return False when the room has a price
      */
     @Override
