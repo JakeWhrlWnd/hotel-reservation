@@ -1,12 +1,12 @@
 package model;
-/**
- * Creates the Customer Class.
- * Setups the firstName, lastName, and email variables. Uses a Regex to confirm the validity of the user's email.
- * @author James Norris
- */
 
 import java.util.regex.Pattern;
 
+/**
+ * Creates the Customer Class.
+ * Gets the Customer information. Uses a Regex to validate the user's email.
+ * @author James Norris
+ */
 public class Customer {
 
     private String firstName;
@@ -15,9 +15,9 @@ public class Customer {
 
     /**
      * Constructor for Customer Class
-     * @param firstName
-     * @param lastName
-     * @param email
+     * @param firstName string, Customer's first name
+     * @param lastName string, Customer's last name
+     * @param email string, Customer's email
      */
     public Customer(String firstName, String lastName, String email) {
         this.firstName = firstName;
