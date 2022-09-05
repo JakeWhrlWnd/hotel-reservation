@@ -1,16 +1,20 @@
 package model;
+
+import java.util.Objects;
+
 /**
- * Creates the Room Class.
- * This class is used to implement the IRoom Interface.
+ * Room Class
+ * Implements the IRoom Interface
  * @author James Norris
  */
 public class Room implements IRoom{
-    private String roomNumber;
-    private Double price;
-    private RoomType enumeration;
+    private final String roomNumber; // Represents the Room number
+    protected final Double price; // Represents the Room price
+    private final RoomType enumeration; // Represents the Room type - Single or Double
 
     /**
-     * Constructor for Room Class
+     * Constructor for the Room Class
+     * Creates a room with number, price, and type
      * @param roomNumber string, the hotel room number
      * @param price double, the hotel room price
      * @param enumeration string, the hotel room type - SINGLE or DOUBLE
@@ -23,16 +27,11 @@ public class Room implements IRoom{
 
     /**
      * Overrides the getRoomNumber method declared by the IRoom Interface
-     *
      * @return The hotel room number
      */
     @Override
     public String getRoomNumber() {
         return roomNumber;
-    }
-
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
     }
 
     /**
@@ -44,10 +43,6 @@ public class Room implements IRoom{
         return price;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     /**
      * Overrides the getRoomType method declared by the IRoom Interface
      * @return The hotel room type - either SINGLE or DOUBLE
@@ -55,10 +50,6 @@ public class Room implements IRoom{
     @Override
     public RoomType getRoomType() {
         return enumeration;
-    }
-
-    public void setEnumeration(RoomType enumeration) {
-        this.enumeration = enumeration;
     }
 
     /**
@@ -70,10 +61,27 @@ public class Room implements IRoom{
         return false;
     }
 
+    /**
+     * Overrides the toString method
+     * @return A better description of the Room attributes
+     */
     @Override
     public String toString() {
         return "Room number: " + roomNumber
                 + "\n Room price: $" + price
                 + "\n Room type: " + enumeration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return Objects.equals(roomNumber, room.roomNumber) && Objects.equals(price, room.price) && enumeration == room.enumeration;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomNumber, price, enumeration);
     }
 }
