@@ -58,7 +58,7 @@ public class Room implements IRoom{
      */
     @Override
     public boolean isFree() {
-        return false;
+        return this.price != null && this.price.equals(0.0);
     }
 
     /**
@@ -68,8 +68,8 @@ public class Room implements IRoom{
     @Override
     public String toString() {
         return "Room number: " + roomNumber
-                + "\n Room price: $" + price
-                + "\n Room type: " + enumeration;
+                + "\nRoom price: $" + price
+                + "\nRoom type: " + enumeration;
     }
 
     @Override

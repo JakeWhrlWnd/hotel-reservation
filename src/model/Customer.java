@@ -9,13 +9,17 @@ public class Customer {
     private String lastName;
     private String email;
 
-    private final String REGEX = "^(.+)@(.+)[.com]$";
-    private final Pattern EMAIL = Pattern.compile(REGEX);
-
     public Customer(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = isValidEmail(email);
+        this.email = email;
+
+        String REGEX = "^(.+)@(.+)[.com]$";
+        Pattern EMAIL = Pattern.compile(REGEX);
+
+        if (!EMAIL.matcher(email).matches()) {
+            throw new IllegalArgumentException("Email is invalid.");
+        }
     }
 
     public String getFirstName() {
@@ -39,7 +43,7 @@ public class Customer {
     }
 
     public void setEmail(String email) {
-        this.email = isValidEmail(email);
+        this.email = email;
     }
 
     @Override
@@ -53,13 +57,6 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(firstName, lastName, email);
-    }
-
-    private String isValidEmail(String email) {
-        if (EMAIL.matcher(email).matches()) {
-            return email;
-        }
-        throw new IllegalArgumentException("Email is invalid.");
     }
 
     @Override

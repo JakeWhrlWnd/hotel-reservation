@@ -9,13 +9,15 @@ import model.Reservation;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class MainMenu {
 
     public static void showMainMenu() {
-        try (Scanner scanner = new Scanner(System.in)) {
+        System.out.println(mainMenuTxt);
+        Scanner scanner = new Scanner(System.in);
+        try {
             while (flag) {
-                System.out.println(mainMenuTxt);
                 while (scanner.hasNext()) {
                     while (!scanner.hasNextInt()) {
                         System.out.println("Please, pick from 1 to 5.");
@@ -148,17 +150,26 @@ public class MainMenu {
 
         System.out.println("Please enter your Email: name@domain.com");
         String email = scanner.nextLine();
+        while (isNotValidEmail(email)) {
+            System.out.println("Please enter a valid email.");
+            email = scanner.nextLine();
+        }
 
         try {
             HotelResource.createACustomer(email, firstName, lastName);
-        } catch (IllegalArgumentException e) {
-            System.out.println((e.getLocalizedMessage()));
-            return null;
+            System.out.println("Welcome! Account created successfully.");
+            showMainMenu();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println();
-        System.out.println("Name: " + firstName + " " + lastName + ", Email: " + email);
-        System.out.println();
+
         return email;
+    }
+
+    public static boolean isNotValidEmail(String email) {
+        String REGEX = "^(.+)@(.+).com$";
+        Pattern EMAIL = Pattern.compile(REGEX);
+        return !EMAIL.matcher(email).matches();
     }
 
     protected static boolean flag = true;

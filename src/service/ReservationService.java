@@ -1,5 +1,6 @@
 package service;
 
+import menu.AdminMenu;
 import model.Customer;
 import model.IRoom;
 import model.Reservation;
@@ -7,7 +8,7 @@ import model.Reservation;
 import java.util.*;
 
 public class ReservationService {
-    private static ReservationService reservationService = null;
+    private static ReservationService reservationService = new ReservationService();
 
     public static ReservationService getInstance() {
         if (reservationService == null) {
@@ -32,7 +33,7 @@ public class ReservationService {
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
         Reservation reservation = new Reservation(customer, room, checkInDate, checkOutDate);
 
-        Collection<Reservation> customerReservations = reservations.get(customer.getEmail());
+        Collection<Reservation> customerReservations = getCustomersReservation(customer);
 
         if (customerReservations == null) {
             customerReservations = new LinkedList<>();
