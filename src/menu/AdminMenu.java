@@ -13,7 +13,8 @@ import java.util.Scanner;
 
 public class AdminMenu {
 
-    public static void showAdminMenu(Scanner scanner) {
+    public static void showAdminMenu() {
+        Scanner scanner = new Scanner(System.in);
         flag = true;
         while (flag) {
             System.out.println(adminMenuTxt);

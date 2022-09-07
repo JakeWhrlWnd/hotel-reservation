@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class CustomerService {
 
-    private static CustomerService customerService = new CustomerService();
+    private static CustomerService customerService; // static reference
 
     public static CustomerService getInstance() {
         if (customerService == null) {
