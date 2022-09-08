@@ -10,6 +10,20 @@ import java.util.Collection;
 import java.util.Date;
 
 public class HotelResource {
+    /**
+     * Singleton Pattern for HotelResource Class
+     * Creates a static reference and a method to get the instance
+     */
+    private static HotelResource hotelResource; // static reference
+
+    private HotelResource() {}
+
+    public static HotelResource getInstance() {
+        if (hotelResource == null) {
+            hotelResource = new HotelResource();
+        }
+        return hotelResource;
+    }
 
     public static Customer getCustomer(String email) {
         CustomerService customerService = CustomerService.getInstance();

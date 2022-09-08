@@ -9,6 +9,20 @@ import java.util.Collection;
 import java.util.List;
 
 public class AdminResource {
+    /**
+     * Singleton Pattern for AdminResource Class
+     * Creates a static reference and a method to get the instance
+     */
+    private static AdminResource adminResource; // static reference
+
+    private AdminResource() {}
+
+    public static AdminResource getInstance() {
+        if (adminResource == null) {
+            adminResource = new AdminResource();
+        }
+        return adminResource;
+    }
 
     public static Customer getCustomer(String email) {
         CustomerService customerService = CustomerService.getInstance();

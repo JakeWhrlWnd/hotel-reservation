@@ -1,6 +1,5 @@
 package service;
 
-import menu.AdminMenu;
 import model.Customer;
 import model.IRoom;
 import model.Reservation;
@@ -8,7 +7,14 @@ import model.Reservation;
 import java.util.*;
 
 public class ReservationService {
-    private static ReservationService reservationService = new ReservationService();
+
+    /**
+     * Singleton Pattern for ReservationService Class
+     * Creates a static reference and a method to get the instance
+     */
+    private static ReservationService reservationService; // static reference
+
+    private ReservationService() {}
 
     public static ReservationService getInstance() {
         if (reservationService == null) {
@@ -19,8 +25,6 @@ public class ReservationService {
 
     private final Map<String, IRoom> rooms = new HashMap<>();
     private final Map<String, Collection<Reservation>> reservations = new HashMap<>();
-
-    private ReservationService() {}
 
     public void addRoom(IRoom room) {
         rooms.put(room.getRoomNumber(), room);

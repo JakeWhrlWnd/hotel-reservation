@@ -50,23 +50,23 @@ public class MainMenu {
     private static void findAndReserveARoom() {
         Scanner scanner = new Scanner(System.in);
         SimpleDateFormat bookingDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        System.out.println("Please enter check-in date as MM/DD/YYYY.");
+        System.out.println("Enter check-in date as MM/DD/YYYY.");
         String checkInDateStr = scanner.nextLine();
         Date checkInDate = null;
         try{
             checkInDate = bookingDateFormat.parse(checkInDateStr);
         } catch (Exception e) {
-            System.out.println("Please enter in correct format MM/DD/YYYY");
+            System.out.println("Date format invalid, MM/DD/YYYY");
             findAndReserveARoom();
         }
 
-        System.out.println("Please enter check-out date as MM/DD/YYYY.");
+        System.out.println("Enter check-out date as MM/DD/YYYY.");
         String checkOutDateStr = scanner.nextLine();
         Date checkOutDate = null;
         try{
             checkOutDate = bookingDateFormat.parse(checkOutDateStr);
         } catch (Exception e) {
-            System.out.println("Please enter in correct format MM/DD/YYYY");
+            System.out.println("Date format invalid, MM/DD/YYYY");
             findAndReserveARoom();
         }
 
@@ -163,9 +163,17 @@ public class MainMenu {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your First name:");
         String firstName = scanner.nextLine();
+        while (isNotValidName(firstName)) {
+            System.out.println("Name should begin with a letter.");
+            firstName = scanner.nextLine();
+        }
 
         System.out.println("Please enter your Last name:");
         String lastName = scanner.nextLine();
+        while (isNotValidName(lastName)) {
+            System.out.println("Name should begin with a letter.");
+            lastName = scanner.nextLine();
+        }
 
         System.out.println("Please enter your Email: name@domain.com");
         String email = scanner.nextLine();
@@ -176,7 +184,7 @@ public class MainMenu {
 
         try {
             HotelResource.createACustomer(email, firstName, lastName);
-            System.out.println("Welcome! Account created successfully.");
+            System.out.println("Welcome, account created successfully!");
             showMainMenu();
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,6 +193,11 @@ public class MainMenu {
         return email;
     }
 
+    public static boolean isNotValidName(String name) {
+        String REGEX = "^[A-Za-z]*$";
+        Pattern NAME = Pattern.compile(REGEX);
+        return !NAME.matcher(name).matches();
+    }
     public static boolean isNotValidEmail(String email) {
         String REGEX = "^(.+)@(.+).com$";
         Pattern EMAIL = Pattern.compile(REGEX);
