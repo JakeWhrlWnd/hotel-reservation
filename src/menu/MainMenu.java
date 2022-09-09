@@ -12,8 +12,9 @@ import java.util.regex.Pattern;
 
 public class MainMenu {
 
-    private final static Scanner scanner = new Scanner(System.in);
-    private final static SimpleDateFormat bookingDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private static final HotelResource hotelResource = HotelResource.getInstance();
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final SimpleDateFormat bookingDateFormat = new SimpleDateFormat("MM/dd/yyyy");
     public static void showMainMenu() {
         System.out.println(mainMenuTxt);
         while (flag) {
@@ -36,75 +37,7 @@ public class MainMenu {
     }
 
     private static void findAndReserveARoom() {
-        try {
-            Date checkIn = getCheckInDate();
-            Date checkOut = getCheckOutDate();
-            String email = getEmail();
 
-            if (checkIn != null && checkOut != null) {
-                Collection<IRoom> availableRooms = HotelResource.findARoom(checkIn, checkOut);
-            }
-        }
-
-        while (availableRooms.isEmpty()) {
-            System.out.println("No available rooms for these dates.");
-            System.out.println("Here are some recommendations.");
-
-            Calendar calendar = new GregorianCalendar();
-
-            assert checkInDate != null;
-            calendar.setTime(checkInDate);
-            calendar.add(Calendar.DATE, 7);
-            checkInDate = calendar.getTime();
-
-            assert checkOutDate != null;
-            calendar.setTime(checkOutDate);
-            calendar.add(Calendar.DATE, 7);
-            checkOutDate = calendar.getTime();
-
-            availableRooms = HotelResource.findARoom(checkInDate, checkOutDate);
-            System.out.println("Current vacancies from" + checkInDate + " to " + checkOutDate);
-        }
-
-        for (IRoom room : availableRooms) {
-            System.out.println(room);
-        }
-
-        String email;
-        System.out.println("Do you have an account with us? (y/n)");
-        char userChoice = scanner.nextLine().trim().charAt(0);
-        if (userChoice == 'y') {
-            System.out.println("Welcome back! Enter your email: (name@domain.com)");
-            String tempEmail = scanner.nextLine();
-            Customer customer = AdminResource.getCustomer(tempEmail);
-            if (customer == null) {
-                email = createAnAccount();
-            } else {
-                email = tempEmail;
-            }
-        } else if (userChoice == 'n') {
-            email = createAnAccount();
-        } else {
-            System.out.println("Entry not valid! Please input y/n.");
-            return;
-        }
-
-        System.out.println("What room number would you like to reserve?");
-        while (!scanner.hasNextInt()) {
-            System.out.println("Please enter a room number.");
-            scanner.next();
-        }
-
-        while (true) {
-            IRoom theRoom = HotelResource.getRoom(scanner.nextLine());
-            if (availableRooms.contains(theRoom)) {
-                Reservation theReservation = HotelResource.bookARoom(email, theRoom, checkInDate, checkOutDate);
-                System.out.println(theReservation);
-                break;
-            } else {
-                System.out.println("Room number is invalid. Please try again.");
-            }
-        }
     }
 
     private static Date getCheckInDate() {
