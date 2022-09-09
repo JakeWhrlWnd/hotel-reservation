@@ -5,8 +5,10 @@ import model.IRoom;
 import model.Reservation;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ReservationService {
+    private static final int DEFAULT_PLUS_DAYS = 8;
 
     /**
      * Singleton Pattern for ReservationService Class
@@ -27,11 +29,19 @@ public class ReservationService {
     private final Map<String, Collection<Reservation>> reservations = new HashMap<>();
 
     public void addRoom(IRoom room) {
-        rooms.put(room.getRoomNumber(), room);
+        if (rooms.containsKey(room.getRoomNumber())) {
+            throw new IllegalArgumentException(room.getRoomNumber() + " already in the system.");
+        } else {
+            rooms.put(room.getRoomNumber(), room);
+        }
     }
 
     public IRoom getARoom(String roomId) {
-        return rooms.get(roomId);
+        if (rooms.containsKey(roomId)){
+            return rooms.get(roomId);
+        } else {
+            throw new IllegalArgumentException(roomId + " not in the system.");
+        }
     }
 
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
@@ -50,40 +60,40 @@ public class ReservationService {
     }
 
     public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate) {
-        Collection<IRoom> availableRooms = new LinkedList<>();
-
-        Collection<IRoom> reservedRooms = findReservedRooms(checkInDate, checkOutDate);
-
-        for (IRoom room : rooms.values()) {
-            if (!reservedRooms.contains(room)) {
-                availableRooms.add(room);
-            }
-        }
-        return availableRooms;
+        return findAvailableRooms(checkInDate, checkOutDate);
     }
 
-    public Collection<IRoom> findReservedRooms(Date checkInDate, Date checkOutDate) {
+    private Collection<IRoom> findAvailableRooms(Date checkInDate, Date checkOutDate) {
         Collection<Reservation> allReservations = getAllReservations();
 
-        Collection<IRoom> reservedRooms = new LinkedList<>();
+        Collection<IRoom> notAvailableRooms = new LinkedList<>();
 
         for (Reservation reservation : allReservations) {
-            if ((checkInDate.after(reservation.getCheckInDate()) || checkInDate.equals(reservation.getCheckInDate())) && checkOutDate.before(reservation.getCheckOutDate()) || checkOutDate.equals(reservation.getCheckOutDate())) {
-                reservedRooms.add(reservation.getRoom());
+            if (reservationOverlaps(reservation, checkInDate, checkOutDate)) {
+                notAvailableRooms.add(reservation.getRoom());
             }
         }
-        return reservedRooms;
+
+        return rooms.values().stream().filter(room -> notAvailableRooms.stream().noneMatch(notAvailableRoom -> notAvailableRoom.equals(room))).collect(Collectors.toList());
     }
 
+    public Collection<IRoom> findAlternateRooms(Date checkInDate, Date checkOutDate) {
+        return findAvailableRooms(addPlusDays(checkInDate), addPlusDays(checkOutDate));
+    }
+
+    public Date addPlusDays(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, DEFAULT_PLUS_DAYS);
+
+        return calendar.getTime();
+    }
+
+    private boolean reservationOverlaps(Reservation reservation, Date checkInDate, Date checkOutDate) {
+        return checkInDate.before(reservation.getCheckOutDate()) && checkOutDate.after(reservation.getCheckInDate());
+    }
     public Collection<IRoom> getAllRooms() {
         return rooms.values();
-    }
-
-    void printAllRooms() {
-        Collection<IRoom> allRooms = getAllRooms();
-        for (IRoom room : allRooms) {
-            System.out.println(room);
-        }
     }
 
     private Collection<Reservation> getAllReservations() {

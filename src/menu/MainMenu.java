@@ -12,66 +12,39 @@ import java.util.regex.Pattern;
 
 public class MainMenu {
 
+    private final static Scanner scanner = new Scanner(System.in);
+    private final static SimpleDateFormat bookingDateFormat = new SimpleDateFormat("MM/dd/yyyy");
     public static void showMainMenu() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println(mainMenuTxt);
-        try {
-            while (flag) {
-                while (scanner.hasNext()) {
-                    while (!scanner.hasNextInt()) {
-                        System.out.println("Please, pick from 1 to 5.");
-                        scanner.next();
-                    }
-                    int temp = scanner.nextInt();
-                    if (temp >= 1 && temp <= 5) {
-                        scanner.nextLine();
-                        handleUserInput(temp);
-                        break;
-                    }
-                    System.out.println("Please, pick from 1 to 5.");
+        while (flag) {
+            try {
+                int userInput = Integer.parseInt(scanner.nextLine());
+                switch (userInput) {
+                    case 1 -> findAndReserveARoom();     // 1. Find and reserve a room
+                    case 2 -> seeMyReservations();       // 2. See my reservations
+                    case 3 -> createAnAccount();         // 3. Create an account
+                    case 4 -> AdminMenu.showAdminMenu(); // 4. Open the Admin Menu
+                    case 5 -> flag = false;              // 5. Exit application
+                    default -> throw new IllegalArgumentException("Invalid input. Please, enter a number between 1 and 5.");
                 }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Only numbers accepted.");
+            } catch (Throwable e) {
+                System.out.println(e.getMessage());
             }
-        } catch (Exception e) {
-            e.getLocalizedMessage();
-        }
-    }
-
-    protected static void handleUserInput(int userInput) {
-        switch (userInput) {
-            case 1 -> findAndReserveARoom();     // 1. Find and reserve a room
-            case 2 -> seeMyReservations();       // 2. See my reservations
-            case 3 -> createAnAccount();         // 3. Create an account
-            case 4 -> AdminMenu.showAdminMenu(); // 4. Open the Admin Menu
-            case 5 -> flag = false;              // 5. Exit application
-            default -> throw new IllegalArgumentException("Input not valid: " + userInput);
         }
     }
 
     private static void findAndReserveARoom() {
-        Scanner scanner = new Scanner(System.in);
-        SimpleDateFormat bookingDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        System.out.println("Enter check-in date as MM/DD/YYYY.");
-        String checkInDateStr = scanner.nextLine();
-        Date checkInDate = null;
-        try{
-            checkInDate = bookingDateFormat.parse(checkInDateStr);
-        } catch (Exception e) {
-            System.out.println("Date format invalid, MM/DD/YYYY");
-            findAndReserveARoom();
-        }
+        try {
+            Date checkIn = getCheckInDate();
+            Date checkOut = getCheckOutDate();
+            String email = getEmail();
 
-        System.out.println("Enter check-out date as MM/DD/YYYY.");
-        String checkOutDateStr = scanner.nextLine();
-        Date checkOutDate = null;
-        try{
-            checkOutDate = bookingDateFormat.parse(checkOutDateStr);
-        } catch (Exception e) {
-            System.out.println("Date format invalid, MM/DD/YYYY");
-            findAndReserveARoom();
+            if (checkIn != null && checkOut != null) {
+                Collection<IRoom> availableRooms = HotelResource.findARoom(checkIn, checkOut);
+            }
         }
-
-        System.out.println();
-        Collection<IRoom> availableRooms = HotelResource.findARoom(checkInDate, checkOutDate);
 
         while (availableRooms.isEmpty()) {
             System.out.println("No available rooms for these dates.");
@@ -132,6 +105,30 @@ public class MainMenu {
                 System.out.println("Room number is invalid. Please try again.");
             }
         }
+    }
+
+    private static Date getCheckInDate() {
+        System.out.println("Enter check-in date as MM/DD/YYYY.");
+        String checkInDateStr = scanner.nextLine();
+        Date checkInDate = null;
+        try{
+            return checkInDate = bookingDateFormat.parse(checkInDateStr);
+        } catch (Exception e) {
+            System.out.println("Date format invalid, MM/DD/YYYY");
+        }
+        return checkInDate;
+    }
+
+    private static Date getCheckOutDate() {
+        System.out.println("Enter check-out date as MM/DD/YYYY.");
+        String checkOutDateStr = scanner.nextLine();
+        Date checkOutDate = null;
+        try{
+            checkOutDate = bookingDateFormat.parse(checkOutDateStr);
+        } catch (Exception e) {
+            System.out.println("Date format invalid, MM/DD/YYYY");
+        }
+        return checkOutDate;
     }
 
     private static void seeMyReservations() {
