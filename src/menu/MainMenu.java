@@ -65,7 +65,6 @@ public class MainMenu {
     }
 
     private static void seeMyReservations() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your email:");
         String email = scanner.nextLine();
         while (isNotValidEmail(email)) {
@@ -90,7 +89,6 @@ public class MainMenu {
     }
 
     private static String createAnAccount() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter your First name:");
         String firstName = scanner.nextLine();
         while (isNotValidName(firstName)) {
