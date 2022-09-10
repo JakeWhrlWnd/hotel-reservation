@@ -1,18 +1,15 @@
 package menu;
 
-import api.AdminResource;
 import api.HotelResource;
-import model.Customer;
 import model.IRoom;
 import model.Reservation;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class MainMenu {
-
-    private static final HotelResource hotelResource = HotelResource.getInstance();
     private static final Scanner scanner = new Scanner(System.in);
     private static final SimpleDateFormat bookingDateFormat = new SimpleDateFormat("MM/dd/yyyy");
     public static void showMainMenu() {
@@ -37,31 +34,91 @@ public class MainMenu {
     }
 
     private static void findAndReserveARoom() {
-
-    }
-
-    private static Date getCheckInDate() {
         System.out.println("Enter check-in date as MM/DD/YYYY.");
-        String checkInDateStr = scanner.nextLine();
-        Date checkInDate = null;
-        try{
-            return checkInDate = bookingDateFormat.parse(checkInDateStr);
-        } catch (Exception e) {
-            System.out.println("Date format invalid, MM/DD/YYYY");
+        Date checkIn = getBookingDate();
+
+        System.out.println("Enter check-in date as MM/DD/YYYY.");
+        Date checkOut = getBookingDate();
+
+        if (checkIn != null && checkOut != null) {
+            Collection<IRoom> availableRooms = HotelResource.findARoom(checkIn, checkOut);
+
+            if (availableRooms.isEmpty()) {
+                Collection<IRoom> alternateRooms = HotelResource.findAlternateRooms(checkIn, checkOut);
+
+
+                if (alternateRooms.isEmpty()) {
+                    System.out.println("Sorry, no rooms were found.");
+                } else {
+                    Date alternateCheckIn = HotelResource.addPlusDays(checkIn);
+                    Date alternateCheckOut = HotelResource.addPlusDays(checkOut);
+                    System.out.println("Rooms available for alternate dates:\nCheck-in Date: " + alternateCheckIn + "\nCheck-out Date: " + alternateCheckOut);
+                    printRooms(alternateRooms);
+                    bookRoom(scanner, alternateCheckIn, alternateCheckOut, alternateRooms);
+                }
+            } else {
+                printRooms(availableRooms);
+                bookRoom(scanner, checkIn, checkOut, availableRooms);
+            }
         }
-        return checkInDate;
     }
 
-    private static Date getCheckOutDate() {
-        System.out.println("Enter check-out date as MM/DD/YYYY.");
-        String checkOutDateStr = scanner.nextLine();
-        Date checkOutDate = null;
-        try{
-            checkOutDate = bookingDateFormat.parse(checkOutDateStr);
-        } catch (Exception e) {
-            System.out.println("Date format invalid, MM/DD/YYYY");
+    private static Date getBookingDate() {
+        try {
+            return bookingDateFormat.parse(scanner.nextLine());
+        } catch (ParseException e) {
+            System.out.println("Date invalid.");
+            findAndReserveARoom();
         }
-        return checkOutDate;
+        return null;
+    }
+
+    private static void printRooms(Collection<IRoom> rooms) {
+        if (rooms.isEmpty()) {
+            System.out.println("No rooms found.");
+        } else {
+            rooms.forEach(System.out::println);
+        }
+    }
+
+    private static void bookRoom(Scanner scanner, Date checkInDate, Date checkOutDate, Collection<IRoom> rooms) {
+        System.out.println("Would you like to make a reservation? y/n");
+        String bookRoom = scanner.nextLine();
+
+        if ("y".equals(bookRoom)) {
+            System.out.println("Do you have an account with us? y/n");
+            String haveAccount = scanner.nextLine();
+
+            if ("y".equals(haveAccount)) {
+                System.out.println("Enter email format: name@domain.com");
+                String customerEmail = scanner.nextLine();
+
+                if (HotelResource.getCustomer(customerEmail) == null) {
+                    System.out.println("Customer not found.\nYou may need to create a new account.");
+                } else {
+                    System.out.println("What room number would you like to reserve?");
+                    String roomNumber = scanner.nextLine();
+
+                    if (rooms.stream().anyMatch(room -> room.getRoomNumber().equals(roomNumber))) {
+                        IRoom room = HotelResource.getRoom(roomNumber);
+
+                        Reservation reservation = HotelResource.bookARoom(customerEmail, room, checkInDate, checkOutDate);
+                        System.out.println("Reservation created successfully!");
+                        System.out.println(reservation);
+                    } else {
+                        System.out.println("Room not available.\nStart reservation again.");
+                    }
+                }
+                showMainMenu();
+            } else {
+                System.out.println("Create an account.");
+                showMainMenu();
+            }
+        } else if ("n".equals(bookRoom)) {
+            showMainMenu();
+        } else {
+            bookRoom(scanner, checkInDate, checkOutDate, rooms);
+        }
     }
 
     private static void seeMyReservations() {
@@ -72,23 +129,18 @@ public class MainMenu {
             email = scanner.nextLine();
         }
 
-        if (HotelResource.getCustomer(email) != null) {
-            for (Reservation reservation : HotelResource.getCustomersReservations(email)) {
-                System.out.println(reservation);
-            }
+        printReservations(HotelResource.getCustomersReservations(email));
+    }
+
+    private static void printReservations(Collection<Reservation> reservations) {
+        if (reservations == null || reservations.isEmpty()) {
+            System.out.println("No reservations found.");
         } else {
-            System.out.println("No reservation found.");
-            System.out.println("Would you like to book a room? (y/n)");
-            String userChoice = scanner.nextLine();
-            if (userChoice.toLowerCase().charAt(0) == 'y') {
-                findAndReserveARoom();
-            } else {
-                showMainMenu();
-            }
+            reservations.forEach(reservation -> System.out.println("\n" + reservation));
         }
     }
 
-    private static String createAnAccount() {
+    private static void createAnAccount() {
         System.out.println("Please enter your First name:");
         String firstName = scanner.nextLine();
         while (isNotValidName(firstName)) {
@@ -114,11 +166,10 @@ public class MainMenu {
             HotelResource.createACustomer(email, firstName, lastName);
             System.out.println("Welcome, account created successfully!");
             showMainMenu();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getLocalizedMessage());
+            createAnAccount();
         }
-
-        return email;
     }
 
     public static boolean isNotValidName(String name) {

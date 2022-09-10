@@ -6,42 +6,29 @@ import model.IRoom;
 import model.Room;
 import model.RoomType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class AdminMenu {
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void showAdminMenu() {
-        Scanner scanner = new Scanner(System.in);
-        flag = true;
+        System.out.println(adminMenuTxt);
         while (flag) {
-            System.out.println(adminMenuTxt);
-            while (scanner.hasNext()) {
-                while (!scanner.hasNextInt()) {
-                    System.out.println("Please, pick from 1 to 5.");
-                    scanner.next();
+            try {
+                int userInput = Integer.parseInt(scanner.nextLine());
+                switch (userInput) {
+                    case 1 -> seeAllCustomers();                      // 1. See all Customers
+                    case 2 -> seeAllRooms();                          // 2. See all Rooms
+                    case 3 -> AdminResource.displayAllReservations(); // 3. See all Reservations
+                    case 4 -> addRoom();                      // 4. Add a Room
+                    case 5 -> flag = false;                           // 5. Exit Application
+                    default -> throw new IllegalArgumentException("Input not valid: " + userInput);
                 }
-                int temp = scanner.nextInt();
-                if (temp >= 1 && temp <= 5) {
-                    scanner.nextLine();
-                    handleUserInput(scanner, temp);
-                    break;
-                }
-                System.out.println("Please, pick from 1 to 5.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Only numbers accepted.");
+            } catch (Throwable e) {
+                System.out.println(e.getMessage());
             }
-        }
-    }
-
-    protected static void handleUserInput(Scanner scanner, int userInput) {
-        switch (userInput) {
-            case 1 -> seeAllCustomers();                      // 1. See all Customers
-            case 2 -> seeAllRooms();                          // 2. See all Rooms
-            case 3 -> AdminResource.displayAllReservations(); // 3. See all Reservations
-            case 4 -> addARoom(scanner);                      // 4. Add a Room
-            case 5 -> flag = false;                           // 5. Exit Application
-            default -> throw new IllegalArgumentException("Input not valid: " + userInput);
         }
     }
 
@@ -49,66 +36,85 @@ public class AdminMenu {
         Collection<Customer> customers = AdminResource.getAllCustomers();
 
         if (!customers.isEmpty()) {
-            for (Customer customer : customers) {
-                System.out.println(customer);
-            }
-            System.out.println();
+            AdminResource.getAllCustomers().forEach(System.out::println);
         } else {
-            System.out.println("No customers added.");
+            System.out.println("No customers found.");
         }
     }
 
     private static void seeAllRooms() {
         Collection<IRoom> rooms = AdminResource.getAllRooms();
+
         if (!rooms.isEmpty()) {
-            for (IRoom room : rooms) {
-                System.out.println(room);
-            }
-            System.out.println();
+            AdminResource.getAllRooms().forEach(System.out::println);
         } else {
-            System.out.println("No rooms added.");
+            System.out.println("No rooms found.");
         }
     }
 
-    private static void addARoom(Scanner scanner) {
-        List<IRoom> rooms = new ArrayList<>();
-        RoomType roomType = RoomType.SINGLE;
+    private static void seeAllReservations() {
+        AdminResource.displayAllReservations();
+    }
 
-        String userChoice = "y";
-        while (userChoice.equals("y")) {
+    private static void addRoom() {
+
             System.out.println("Enter room number:");
-            String roomNumber = scanner.next().trim();
+            String roomNumber = scanner.nextLine();
 
             System.out.println("Enter price per night:");
-            while (!scanner.hasNextDouble()) {
-                System.out.println("Please input double...");
-                scanner.next();
-            }
-            double price = scanner.nextDouble();
+            double price = enterRoomPrice(scanner);
 
             System.out.println("Enter room type: 1 for Single bed, 2 for Double bed");
-            while (scanner.hasNext()) {
-                while (!scanner.hasNextInt()) {
-                    System.out.println("Input a 1 or 2");
-                    scanner.next();
-                }
-                int temp = scanner.nextInt();
-                if (temp == 1 || temp == 2) {
-                    roomType = temp == 1 ? RoomType.SINGLE : RoomType.DOUBLE;
-                    break;
-                }
-                System.out.println("Input a 1 or 2\n");
-            }
+            RoomType roomType = enterRoomType(scanner);
 
             Room room = new Room(roomNumber, price, roomType);
+
+            AdminResource.addRoom(Collections.singletonList(room));
             System.out.println("Room created: " + "\nRoom number: " + roomNumber + "\nPrice: $" + price + "\nRoom tye: " + roomType);
-            rooms.add(room);
 
             System.out.println("Would you like to add more rooms? (y/n)");
-            userChoice = scanner.next();
-        }
-        AdminResource.addRoom(rooms);
+            addAnotherRoom();
     }
+
+    private static double enterRoomPrice(Scanner scanner) {
+        try {
+            return Double.parseDouble(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid room price.");
+            return enterRoomPrice(scanner);
+        }
+    }
+
+    private static RoomType enterRoomType(Scanner scanner) {
+        try {
+            return RoomType.valueOf(scanner.nextLine());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid room type.");
+            return enterRoomType(scanner);
+        }
+    }
+
+    private static void addAnotherRoom() {
+        try {
+            String anotherRoom = scanner.nextLine();
+
+            while ((anotherRoom.charAt(0) != 'y' && anotherRoom.charAt(0) != 'n') || anotherRoom.length() != 1) {
+                System.out.println("Please enter y (yes) / n (no).");
+                anotherRoom = scanner.nextLine();
+            }
+
+            if (anotherRoom.charAt(0) == 'y') {
+                addRoom();
+            } else if (anotherRoom.charAt(0) == 'n') {
+                showAdminMenu();
+            } else {
+                addAnotherRoom();
+            }
+        } catch (StringIndexOutOfBoundsException e) {
+            addAnotherRoom();
+        }
+    }
+
     protected static boolean flag = true;
 
     protected static final String adminMenuTxt = """

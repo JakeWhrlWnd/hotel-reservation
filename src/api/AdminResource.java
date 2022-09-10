@@ -13,41 +13,34 @@ public class AdminResource {
      * Singleton Pattern for AdminResource Class
      * Creates a static reference and a method to get the instance
      */
-    private static AdminResource adminResource; // static reference
+    private static final AdminResource adminResource = new AdminResource(); // static reference
 
     private AdminResource() {}
 
     public static AdminResource getInstance() {
-        if (adminResource == null) {
-            adminResource = new AdminResource();
-        }
         return adminResource;
     }
 
+    private static final CustomerService customerService = CustomerService.getInstance();
+    private static final ReservationService reservationService = ReservationService.getInstance();
+
     public static Customer getCustomer(String email) {
-        CustomerService customerService = CustomerService.getInstance();
         return customerService.getCustomer(email);
     }
 
     public static void addRoom(List<IRoom> rooms) {
-        ReservationService reservationService = ReservationService.getInstance();
-        for (IRoom theRoom : rooms) {
-            reservationService.addRoom(theRoom);
-        }
+        rooms.forEach(reservationService::addRoom);
     }
 
     public static Collection<IRoom> getAllRooms() {
-        ReservationService reservationService = ReservationService.getInstance();
         return reservationService.getAllRooms();
     }
 
     public static Collection<Customer> getAllCustomers() {
-        CustomerService customerService = CustomerService.getInstance();
         return customerService.getAllCustomers();
     }
 
     public static void displayAllReservations() {
-        ReservationService reservationService = ReservationService.getInstance();
         reservationService.printAllReservation();
     }
 }
