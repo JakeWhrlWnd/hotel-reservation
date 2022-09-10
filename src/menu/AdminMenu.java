@@ -1,10 +1,7 @@
 package menu;
 
 import api.AdminResource;
-import model.Customer;
-import model.IRoom;
-import model.Room;
-import model.RoomType;
+import model.*;
 
 import java.util.*;
 
@@ -53,8 +50,7 @@ public class AdminMenu {
     }
 
     private static void seeAllReservations() {
-        AdminResource.displayAllReservations();
-    }
+        Collection<Reservation> reservations = AdminResource.displayAllReservations(); }
 
     private static void addRoom() {
 
