@@ -119,6 +119,5 @@ public class ReservationService {
                 System.out.println(room + "\n");
             }
         }
-        System.out.println();
     }
 }

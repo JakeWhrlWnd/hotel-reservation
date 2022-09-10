@@ -49,8 +49,7 @@ public class AdminMenu {
         }
     }
 
-    private static void seeAllReservations() {
-        Collection<Reservation> reservations = AdminResource.displayAllReservations(); }
+    private static void seeAllReservations() { AdminResource.displayAllReservations(); }
 
     private static void addRoom() {
 
