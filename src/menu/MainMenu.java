@@ -34,10 +34,10 @@ public class MainMenu {
     }
 
     private static void findAndReserveARoom() {
-        System.out.println("Enter check-in date as MM/DD/YYYY.");
+        System.out.println("Enter check-in date: (MM/DD/YYYY)");
         Date checkIn = getBookingDate();
 
-        System.out.println("Enter check-in date as MM/DD/YYYY.");
+        System.out.println("Enter check-in date: (MM/DD/YYYY)");
         Date checkOut = getBookingDate();
 
         if (checkIn != null && checkOut != null) {
@@ -143,28 +143,42 @@ public class MainMenu {
     private static void createAnAccount() {
         System.out.println("Please enter your First name:");
         String firstName = scanner.nextLine();
-        while (isNotValidName(firstName)) {
+        if (!isNotValidName(firstName) && firstName.charAt(0) != 1) {
             System.out.println("Name should begin with a letter.");
+        } else {
             firstName = scanner.nextLine();
         }
 
         System.out.println("Please enter your Last name:");
         String lastName = scanner.nextLine();
-        while (isNotValidName(lastName)) {
+        if (!isNotValidName(lastName) && lastName.charAt(0) != 1) {
             System.out.println("Name should begin with a letter.");
+        } else {
             lastName = scanner.nextLine();
         }
 
         System.out.println("Please enter your Email: name@domain.com");
         String email = scanner.nextLine();
-        while (isNotValidEmail(email)) {
+        if (!isNotValidEmail(email)) {
             System.out.println("Please enter a valid email.");
+        } else {
             email = scanner.nextLine();
         }
 
         try {
             HotelResource.createACustomer(email, firstName, lastName);
-            System.out.println("Welcome, account created successfully!");
+            System.out.println("Welcome " + firstName + "!");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Account creation successful!");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             showMainMenu();
         } catch (IllegalArgumentException e) {
             System.out.println(e.getLocalizedMessage());
@@ -175,12 +189,12 @@ public class MainMenu {
     public static boolean isNotValidName(String name) {
         String REGEX = "^[A-Za-z]*$";
         Pattern NAME = Pattern.compile(REGEX);
-        return !NAME.matcher(name).matches();
+        return NAME.matcher(name).matches();
     }
     public static boolean isNotValidEmail(String email) {
         String REGEX = "^(.+)@(.+).com$";
         Pattern EMAIL = Pattern.compile(REGEX);
-        return !EMAIL.matcher(email).matches();
+        return EMAIL.matcher(email).matches();
     }
 
     protected static boolean flag = true;

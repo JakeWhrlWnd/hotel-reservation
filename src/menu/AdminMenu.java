@@ -16,9 +16,9 @@ public class AdminMenu {
                 switch (userInput) {
                     case 1 -> seeAllCustomers();                      // 1. See all Customers
                     case 2 -> seeAllRooms();                          // 2. See all Rooms
-                    case 3 -> AdminResource.displayAllReservations(); // 3. See all Reservations
+                    case 3 -> seeAllReservations(); // 3. See all Reservations
                     case 4 -> addRoom();                      // 4. Add a Room
-                    case 5 -> flag = false;                           // 5. Exit Application
+                    case 5 -> MainMenu.showMainMenu();                           // 5. Exit Application
                     default -> throw new IllegalArgumentException("Input not valid: " + userInput);
                 }
             } catch (NumberFormatException e) {
@@ -35,7 +35,13 @@ public class AdminMenu {
         if (!customers.isEmpty()) {
             AdminResource.getAllCustomers().forEach(System.out::println);
         } else {
-            System.out.println("No customers found.");
+            System.out.println("No customers were found.");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            showAdminMenu();
         }
     }
 
@@ -45,14 +51,34 @@ public class AdminMenu {
         if (!rooms.isEmpty()) {
             AdminResource.getAllRooms().forEach(System.out::println);
         } else {
-            System.out.println("No rooms found.");
+            System.out.println("No rooms were found.");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            showAdminMenu();
         }
     }
 
-    private static void seeAllReservations() { AdminResource.displayAllReservations(); }
+    private static void seeAllReservations() {
+        Collection<Reservation> allReservations = AdminResource.getAllReservations();
+
+        if (!allReservations.isEmpty()) {
+            AdminResource.getAllReservations().forEach(System.out::println);
+        }
+        else {
+            System.out.println("No reservations were found.");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            showAdminMenu();
+        }
+    }
 
     private static void addRoom() {
-
             System.out.println("Enter room number:");
             String roomNumber = scanner.nextLine();
 
@@ -65,7 +91,7 @@ public class AdminMenu {
             Room room = new Room(roomNumber, price, roomType);
 
             AdminResource.addRoom(Collections.singletonList(room));
-            System.out.println("Room created: " + "\nRoom number: " + roomNumber + "\nPrice: $" + price + "\nRoom tye: " + roomType);
+            System.out.println("Room created: " + "\nRoom number: " + roomNumber + "\nPrice: $" + price + "\nRoom type: " + roomType);
 
             System.out.println("Would you like to add more rooms? (y/n)");
             addAnotherRoom();
@@ -82,7 +108,7 @@ public class AdminMenu {
 
     private static RoomType enterRoomType(Scanner scanner) {
         try {
-            return RoomType.valueOf(scanner.nextLine());
+            return RoomType.convertIntToRoomType(scanner.nextInt());
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid room type.");
             return enterRoomType(scanner);

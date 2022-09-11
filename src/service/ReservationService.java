@@ -96,28 +96,16 @@ public class ReservationService {
         return rooms.values();
     }
 
-    private Collection<Reservation> getAllReservations() {
+    public Collection<Reservation> getAllReservations() {
         Collection<Reservation> allReservations = new LinkedList<>();
 
         for (Collection<Reservation> reservations : reservations.values()) {
-            allReservations.addAll(reservations);
+        allReservations.addAll(reservations);
         }
         return allReservations;
     }
 
     public Collection<Reservation> getCustomersReservation(Customer customer) {
         return reservations.get(customer.getEmail());
-    }
-    public void printAllReservation() {
-        Collection<Reservation> allReservations = getAllReservations();
-
-        if (allReservations.isEmpty()) {
-            System.out.println("Reservations not found");
-        }
-        else {
-            for (Reservation room : allReservations) {
-                System.out.println(room + "\n");
-            }
-        }
     }
 }
