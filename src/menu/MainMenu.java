@@ -34,10 +34,10 @@ public class MainMenu {
     }
 
     private static void findAndReserveARoom() {
-        System.out.println("Enter check-in date: (MM/DD/YYYY)");
+        System.out.println("Enter check-in date as MM/DD/YYYY.");
         Date checkIn = getBookingDate();
 
-        System.out.println("Enter check-in date: (MM/DD/YYYY)");
+        System.out.println("Enter check-in date as MM/DD/YYYY.");
         Date checkOut = getBookingDate();
 
         if (checkIn != null && checkOut != null) {
@@ -68,7 +68,6 @@ public class MainMenu {
             return bookingDateFormat.parse(scanner.nextLine());
         } catch (ParseException e) {
             System.out.println("Date invalid.");
-            findAndReserveARoom();
         }
         return null;
     }
@@ -124,7 +123,7 @@ public class MainMenu {
     private static void seeMyReservations() {
         System.out.println("Enter your email:");
         String email = scanner.nextLine();
-        while (isNotValidEmail(email)) {
+        while (isValidEmail(email)) {
             System.out.println("Please enter a valid email.");
             email = scanner.nextLine();
         }
@@ -143,42 +142,31 @@ public class MainMenu {
     private static void createAnAccount() {
         System.out.println("Please enter your First name:");
         String firstName = scanner.nextLine();
-        if (!isNotValidName(firstName) && firstName.charAt(0) != 1) {
+        while (isValidName(firstName)) {
             System.out.println("Name should begin with a letter.");
-        } else {
             firstName = scanner.nextLine();
         }
 
         System.out.println("Please enter your Last name:");
         String lastName = scanner.nextLine();
-        if (!isNotValidName(lastName) && lastName.charAt(0) != 1) {
+        while (isValidName(lastName)) {
             System.out.println("Name should begin with a letter.");
-        } else {
             lastName = scanner.nextLine();
         }
 
         System.out.println("Please enter your Email: name@domain.com");
         String email = scanner.nextLine();
-        if (!isNotValidEmail(email)) {
+        while (isValidEmail(email)) {
             System.out.println("Please enter a valid email.");
-        } else {
             email = scanner.nextLine();
         }
 
         try {
             HotelResource.createACustomer(email, firstName, lastName);
             System.out.println("Welcome " + firstName + "!");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            takeABreak();
             System.out.println("Account creation successful!");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            takeABreak();
             showMainMenu();
         } catch (IllegalArgumentException e) {
             System.out.println(e.getLocalizedMessage());
@@ -186,15 +174,23 @@ public class MainMenu {
         }
     }
 
-    public static boolean isNotValidName(String name) {
+    public static boolean isValidName(String name) {
         String REGEX = "^[A-Za-z]*$";
         Pattern NAME = Pattern.compile(REGEX);
         return NAME.matcher(name).matches();
     }
-    public static boolean isNotValidEmail(String email) {
+    public static boolean isValidEmail(String email) {
         String REGEX = "^(.+)@(.+).com$";
         Pattern EMAIL = Pattern.compile(REGEX);
         return EMAIL.matcher(email).matches();
+    }
+
+    public static void takeABreak() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected static boolean flag = true;
