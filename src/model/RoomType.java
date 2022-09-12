@@ -10,11 +10,11 @@ public enum RoomType {
     /**
      * Single room
      */
-    SINGLE(1),
+    SINGLE (1),
     /**
      * Double room
      */
-    DOUBLE(2);
+    DOUBLE (2);
 
     RoomType(int roomType) {
         this.roomType = roomType;

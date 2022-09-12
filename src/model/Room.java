@@ -8,9 +8,9 @@ import java.util.Objects;
  * @author James Norris
  */
 public class Room implements IRoom{
-    private final String roomNumber; // Represents the Room number
+    protected final String roomNumber; // Represents the Room number
     protected final Double price; // Represents the Room price
-    private final RoomType enumeration; // Represents the Room type - Single or Double
+    protected final RoomType enumeration; // Represents the Room type - Single or Double
 
     /**
      * Constructor for the Room Class
@@ -58,7 +58,7 @@ public class Room implements IRoom{
      */
     @Override
     public boolean isFree() {
-        return this.price != null && this.price.equals(0.0);
+        return this.price == (double) 0;
     }
 
     /**
@@ -75,9 +75,8 @@ public class Room implements IRoom{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Room room = (Room) o;
-        return Objects.equals(roomNumber, room.roomNumber) && Objects.equals(price, room.price) && enumeration == room.enumeration;
+        if (!(o instanceof Room room)) return false;
+        return roomNumber.equals(room.roomNumber) && price.equals(room.price) && enumeration == room.enumeration;
     }
 
     @Override

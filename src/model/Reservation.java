@@ -1,67 +1,23 @@
 package model;
 
 import java.util.Date;
-import java.util.Objects;
 
-public class Reservation {
+public record Reservation(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
 
-    private Customer customer;
-    private IRoom room;
-    private Date checkInDate;
-    private Date checkOutDate;
-
-    public Reservation(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
-        this.customer = customer;
-        this.room = room;
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
+    public boolean isRoomReserved(Date checkInDate, Date checkOutDate) {
+        return checkInDate.before(this.checkOutDate) && checkOutDate.after(this.checkInDate);
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public IRoom getRoom() {
-        return room;
-    }
-
-    public void setRoom(IRoom room) {
-        this.room = room;
-    }
-
-    public Date getCheckInDate() {
-        return checkInDate;
-    }
-
-    public void setCheckInDate(Date checkInDate) {
-        this.checkInDate = checkInDate;
-    }
-
-    public Date getCheckOutDate() {
-        return checkOutDate;
-    }
-
-    public void setCheckOutDate(Date checkOutDate) { this.checkOutDate = checkOutDate; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Reservation that = (Reservation) o;
-        return Objects.equals(customer, that.customer) && Objects.equals(room, that.room) && Objects.equals(checkInDate, that.checkInDate) && Objects.equals(checkOutDate, that.checkOutDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(customer, room, checkInDate, checkOutDate);
+        if (!(o instanceof Reservation that)) return false;
+        return customer.equals(that.customer) && room.equals(that.room) && checkInDate.equals(that.checkInDate) && checkOutDate.equals(that.checkOutDate);
     }
 
     @Override
     public String toString() {
-        return "Customer: " + getCustomer() + "\nRoom: " + getRoom() + "\nCheck-in: " + getCheckInDate() + "\nCheck-out: " + getCheckOutDate();
+        return "Customer: " + customer() + "\nRoom: " + room() + "\nCheck-in: " + checkInDate() + "\nCheck-out: " + checkOutDate();
     }
 }
