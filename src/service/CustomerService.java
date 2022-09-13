@@ -19,6 +19,10 @@ public class CustomerService {
         }
         return customerService;
     }
+
+    /**
+     * Creates an object of {@link #customers} that will store String keys and Customer values
+     */
     private static final Map<String, Customer> customers = new HashMap<>();
 
     /**
@@ -39,6 +43,11 @@ public class CustomerService {
     public Customer getCustomer(String customerEmail) {
         return customers.get(customerEmail);
     }
+
+    /**
+     * Returns all registered users
+     * @return collection of customers
+     */
     public Collection<Customer> getAllCustomers() {
         return customers.values();
     }
