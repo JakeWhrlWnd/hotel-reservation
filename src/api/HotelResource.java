@@ -10,8 +10,11 @@ import java.util.Collection;
 import java.util.Date;
 
 public class HotelResource {
+
+    public CustomerService customerService = CustomerService.getInstance();
+
     public static Customer getCustomer(String email) {
-        return CustomerService.getCustomer(email);
+        return customerService.getCustomer(email);
     }
 
     public static void createACustomer(String email, String firstName, String lastName) {

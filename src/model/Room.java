@@ -8,9 +8,9 @@ import java.util.Objects;
  * @author James Norris
  */
 public class Room implements IRoom{
-    protected final String roomNumber; // Represents the Room number
-    protected final Double price; // Represents the Room price
-    protected final RoomType enumeration; // Represents the Room type - Single or Double
+    private String roomNumber; // Represents the Room number
+    private Double price; // Represents the Room price
+    private RoomType enumeration; // Represents the Room type - Single or Double
 
     /**
      * Constructor for the Room Class
@@ -34,6 +34,10 @@ public class Room implements IRoom{
         return roomNumber;
     }
 
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
     /**
      * Overrides the getRoomPrice method declared by the IRoom Interface
      * @return The hotel room price
@@ -41,6 +45,10 @@ public class Room implements IRoom{
     @Override
     public Double getRoomPrice() {
         return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     /**
@@ -52,13 +60,17 @@ public class Room implements IRoom{
         return enumeration;
     }
 
+    public void setEnumeration(RoomType enumeration) {
+        this.enumeration = enumeration;
+    }
+
     /**
      * Overrides the isFree method declared by the IRoom Interface
      * @return False when the room has a price
      */
     @Override
     public boolean isFree() {
-        return this.price == (double) 0;
+        return false;
     }
 
     /**

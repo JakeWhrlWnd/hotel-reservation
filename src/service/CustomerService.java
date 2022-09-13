@@ -11,29 +11,35 @@ public class CustomerService {
      * Singleton Pattern for CustomerService Class
      * Creates a static reference and a method to get the instance
      */
-    private static final CustomerService customerService = new CustomerService(); // static reference
-
-    private CustomerService() {}
-
-    public static CustomerService getInstance() {
+    private static CustomerService customerService; // static reference
+    private CustomerService() {} // constructor
+    public static CustomerService getInstance() { // static method to create instance
+        if (customerService == null) {
+            customerService = new CustomerService();
+        }
         return customerService;
     }
-
     private static final Map<String, Customer> customers = new HashMap<>();
 
-    public static void addCustomer(String email, String firstName, String lastName) {
-        Customer customer = new Customer(firstName, lastName, email);
-        if (customers.containsKey(email)) {
-            throw new IllegalArgumentException("Email is already registered.");
-        }
-        customers.put(customer.getEmail(), customer);
+    /**
+     * Creates a new Customer
+     * @param email string, customer email
+     * @param firstName string, customer first name
+     * @param lastName string, customer last name
+     */
+    public void addCustomer(String email, String firstName, String lastName) {
+        customers.put(email, new Customer(firstName, lastName, email));
     }
 
-    public static Customer getCustomer(String customerEmail) {
+    /**
+     * Returns the customer created with the email entered
+     * @param customerEmail string, customers' email
+     * @return customer using the email provided
+     */
+    public Customer getCustomer(String customerEmail) {
         return customers.get(customerEmail);
     }
-
-    public static Collection<Customer> getAllCustomers() {
+    public Collection<Customer> getAllCustomers() {
         return customers.values();
     }
 }

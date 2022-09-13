@@ -1,10 +1,15 @@
 package model;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
-public record Customer(String firstName, String lastName, String email) {
+public class Customer {
 
-    public Customer(final String firstName, final String lastName, final String email) {
+    private String firstName;
+    private String lastName;
+    private String email;
+
+    public Customer(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -16,8 +21,28 @@ public record Customer(String firstName, String lastName, String email) {
         }
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
@@ -28,7 +53,12 @@ public record Customer(String firstName, String lastName, String email) {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, email);
+    }
+
+    @Override
     public String toString() {
-        return "First name: " + firstName() + "\nLast name: " + lastName() + "\nEmail: " + email();
+        return "First name: " + firstName + "\nLast name: " + lastName + "\nEmail: " + email;
     }
 }
