@@ -5,7 +5,11 @@ import model.Customer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * CustomerService class
+ * Uses a Singleton Design Pattern to store, create, and retrieve {@link Customer}s
+ * @author James Norris
+ */
 public class CustomerService {
     /**
      * Singleton Pattern for CustomerService Class
@@ -21,7 +25,7 @@ public class CustomerService {
     }
 
     /**
-     * Creates an object of {@link #customers} that will store String keys and Customer values
+     * Creates an object of customers that will store String keys and Customer values
      */
     private static final Map<String, Customer> customers = new HashMap<>();
 
