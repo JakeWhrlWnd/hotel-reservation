@@ -5,56 +5,45 @@ import java.util.regex.Pattern;
 
 public class Customer {
 
-    private String firstName;
-    private String lastName;
-    private String email;
+    private final String firstName;
+    private final String lastName;
+    private final String email;
 
-    public Customer(String firstName, String lastName, String email) {
+    private static final String REGEX = "^(.+)@(.+)\\.com$";
+
+    public Customer(final String firstName, final String lastName, final String email) {
+        isValidEmail(email);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-
-        String REGEX = "^(.+)@(.+)[.com]$";
-        Pattern EMAIL = Pattern.compile(REGEX);
-        if (!EMAIL.matcher(email).matches()) {
-            throw new IllegalArgumentException("Email is invalid.");
-        }
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    // public String getFirstName() { return firstName; }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    // public String getLastName() { return lastName; }
 
     public String getEmail() {
         return email;
-    }
+    } // Getter for the User's email
 
-    public void setEmail(String email) {
-        this.email = email;
+    private void isValidEmail(String email) {
+        Pattern pattern = Pattern.compile(REGEX);
+        boolean matches = pattern.matcher(email).matches();
+        if(!matches) {
+            throw new IllegalArgumentException("Email does not match format MM/DD/YYYY");
+        }
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Customer customer)) return false;
-        return firstName.equals(customer.firstName) && lastName.equals(customer.lastName) && email.equals(customer.email);
+        return email.equals(customer.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, email);
+        return Objects.hash(email);
     }
 
     @Override

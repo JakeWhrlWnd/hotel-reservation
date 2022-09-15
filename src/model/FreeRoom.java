@@ -5,15 +5,14 @@ package model;
  * @author James Norris
  */
 public class FreeRoom extends Room{
-    final Double price = 0.00;
     /**
      * Constructor for FreeRoom Class
      * @param roomNumber string, the hotel room number
      * @param price double, the hotel room price
      * @param enumeration string, the hotel room type - SINGLE or DOUBLE
      */
-    public FreeRoom(String roomNumber, Double price, RoomType enumeration) {
-        super(roomNumber, price, enumeration);
+    public FreeRoom(final String roomNumber, final Double price, final RoomType enumeration) {
+        super(roomNumber, 0.0, enumeration);
     }
 
     @Override

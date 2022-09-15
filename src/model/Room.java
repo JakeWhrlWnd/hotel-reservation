@@ -8,9 +8,9 @@ import java.util.Objects;
  * @author James Norris
  */
 public class Room implements IRoom{
-    private String roomNumber; // Represents the Room number
-    private Double price; // Represents the Room price
-    private RoomType enumeration; // Represents the Room type - Single or Double
+    private final String roomNumber; // Represents the Room number
+    protected final Double price; // Represents the Room price
+    private final RoomType enumeration; // Represents the Room type - Single or Double
 
     /**
      * Constructor for the Room Class
@@ -34,10 +34,6 @@ public class Room implements IRoom{
         return roomNumber;
     }
 
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
-    }
-
     /**
      * Overrides the getRoomPrice method declared by the IRoom Interface
      * @return The hotel room price
@@ -47,10 +43,6 @@ public class Room implements IRoom{
         return price;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     /**
      * Overrides the getRoomType method declared by the IRoom Interface
      * @return The hotel room type - either SINGLE or DOUBLE
@@ -58,10 +50,6 @@ public class Room implements IRoom{
     @Override
     public RoomType getRoomType() {
         return enumeration;
-    }
-
-    public void setEnumeration(RoomType enumeration) {
-        this.enumeration = enumeration;
     }
 
     /**
@@ -88,11 +76,11 @@ public class Room implements IRoom{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Room room)) return false;
-        return roomNumber.equals(room.roomNumber) && price.equals(room.price) && enumeration == room.enumeration;
+        return Objects.equals(this.roomNumber, room.roomNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(roomNumber, price, enumeration);
+        return Objects.hash(roomNumber);
     }
 }
