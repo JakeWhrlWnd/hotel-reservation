@@ -18,9 +18,8 @@ public class Customer {
         this.email = email;
     }
 
-    // public String getFirstName() { return firstName; }
-
-    // public String getLastName() { return lastName; }
+    public String getFirstName() { return firstName; } // Getter for the User's first name
+    public String getLastName() { return lastName; } // Getter for the User's last name
 
     public String getEmail() {
         return email;
