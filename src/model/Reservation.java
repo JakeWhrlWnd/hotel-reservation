@@ -33,6 +33,18 @@ public class Reservation {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reservation reservation)) return false;
+        return Objects.equals(customer, reservation.customer) && Objects.equals(room, reservation.room) && Objects.equals(checkInDate, reservation.checkInDate) && Objects.equals(checkOutDate, reservation.checkOutDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(customer, room, checkInDate, checkOutDate);
+    }
+
+    @Override
     public String toString() {
         return "Customer: " + customer + "\nRoom: " + room + "\nCheck-in: " + checkInDate + "\nCheck-out: " + checkOutDate;
     }

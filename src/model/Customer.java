@@ -11,7 +11,7 @@ public class Customer {
 
     private static final String REGEX = "^(.+)@(.+)\\.com$";
 
-    public Customer(final String firstName, final String lastName, final String email) {
+    public Customer(String firstName, String lastName, String email) {
         isValidEmail(email);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -19,6 +19,7 @@ public class Customer {
     }
 
     public String getFirstName() { return firstName; } // Getter for the User's first name
+
     public String getLastName() { return lastName; } // Getter for the User's last name
 
     public String getEmail() {
@@ -37,12 +38,12 @@ public class Customer {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Customer customer)) return false;
-        return email.equals(customer.email);
+        return Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName) && Objects.equals(email, customer.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(firstName, lastName, email);
     }
 
     @Override

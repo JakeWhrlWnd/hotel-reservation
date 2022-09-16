@@ -10,8 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainMenu {
+    private static final HotelResource hotelResource = HotelResource.getInstance();
     private static final Scanner scanner = new Scanner(System.in);
-    private static final SimpleDateFormat bookingDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private static final String BOOKING_DATA_FORMAT = "MM/dd/yyyy";
     public static void showMainMenu() {
         System.out.println(mainMenuTxt);
         while (flag) {
@@ -34,87 +35,32 @@ public class MainMenu {
     }
 
     private static void findAndReserveARoom() {
-        Date checkIn = getCheckInDate();
-        Date checkOut = getCheckOutDate(checkIn);
+        System.out.println("Enter check-in date: (MM/DD/YYYY)");
+        Date checkIn = getDateEntry(scanner);
 
-        Collection<IRoom> availableRooms = HotelResource.findARoom(checkIn, checkOut);
-        boolean wantsToBook = false;
-        if (availableRooms.isEmpty()) {
-            Date newCheckIn = getAlternateDate(checkIn);
-            Date newCheckOut = getAlternateDate(checkOut);
-            availableRooms = HotelResource.findARoom(newCheckIn, newCheckOut);
-            if (!availableRooms.isEmpty()) {
-                    System.out.println("No rooms available for those dates.\nRooms available for alternate dates:\nCheck-in Date: " + newCheckIn + "\nCheck-out Date: " + newCheckOut);
-                    wantsToBook = showAvailableRoomsAndBook(availableRooms);
-                    checkIn = newCheckIn;
-                    checkOut = newCheckOut;
+        System.out.println("Enter check-out date: (MM/DD/YYYY)");
+        Date checkOut = getDateEntry(scanner);
+
+        if (checkIn != null && checkOut != null) {
+            Collection<IRoom> availableRooms = hotelResource.findARoom(checkIn, checkOut);
+            if (availableRooms.isEmpty()) {
+                System.out.println("No rooms in the system");
             } else {
-                System.out.println("No rooms available for those dates.");
+                Date alternateCheckIn = hotelResource.addPlusDays(checkIn);
+                Date alternateCheckOut = hotelResource.addPlusDays(checkOut);
+
             }
-        } else {
-            System.out.println("Available rooms for check-in on " + checkIn + " and check-out on " + checkOut);
-            wantsToBook = showAvailableRoomsAndBook(availableRooms);
-        }
-        if (!wantsToBook){
-            return;
-        }
-
-        Customer customer = getCustomerForReservation();
-        if (customer == null) {
-            System.out.println("Sorry, no account exists for that email.");
-        }
-
-        IRoom room = getRoomForReservation(availableRooms);
-
-        assert customer != null;
-        Reservation reservation = HotelResource.bookARoom(customer.getEmail(), room, checkIn, checkOut);
-        if (reservation == null) {
-            System.out.println("Couldn't process your booking, the room is not available.");
-        } else {
-            System.out.println("Your booking was successful.");
-            System.out.println(reservation);
         }
     }
 
-    private static Date getCheckInDate() {
-        Date checkIn = null;
-        boolean validCheckInDate = false;
-        while (!validCheckInDate) {
-            System.out.println("Enter check-in date as MM/DD/YYYY.");
-            String checkInDateInput = scanner.nextLine();
-            try {
-                checkIn = bookingDateFormat.parse(checkInDateInput);
-                Date today = new Date();
-                if (checkIn.before(today)) {
-                    System.out.println("Check-in date cannot be in the past.");
-                } else {
-                    validCheckInDate = true;
-                }
-            } catch (ParseException e) {
-                System.out.println("Date format is invalid - (MM/DD/YYYY)");
-            }
+    private static Date getDateEntry(Scanner scanner) {
+        try {
+            return new SimpleDateFormat(BOOKING_DATA_FORMAT).parse(scanner.nextLine());
+        } catch (ParseException e) {
+            System.out.println("Invalid date");
+            findAndReserveARoom();
         }
-        return checkIn;
-    }
-
-    private static Date getCheckOutDate(Date checkIn) {
-        Date checkOut = null;
-        boolean validCheckOutDate = false;
-        while (!validCheckOutDate) {
-            System.out.println("Enter check-in date as MM/DD/YYYY.");
-            String checkOutDateInput = scanner.nextLine();
-            try {
-                checkOut = bookingDateFormat.parse(checkOutDateInput);
-                if (checkOut.before(checkIn)) {
-                    System.out.println("Check-in date cannot be in the past.");
-                } else {
-                    validCheckOutDate = true;
-                }
-            } catch (ParseException e) {
-                System.out.println("Date format is invalid - (MM/DD/YYYY)");
-            }
-        }
-        return checkOut;
+        return null;
     }
 
     private static Date getAlternateDate(Date date) {
