@@ -19,7 +19,7 @@ public class Room implements IRoom{
      * @param price double, the hotel room price
      * @param enumeration string, the hotel room type - SINGLE or DOUBLE
      */
-    public Room(String roomNumber, Double price, RoomType enumeration) {
+    public Room(final String roomNumber, final Double price, final RoomType enumeration) {
         this.roomNumber = roomNumber;
         this.price = price;
         this.enumeration = enumeration;
@@ -81,6 +81,6 @@ public class Room implements IRoom{
 
     @Override
     public int hashCode() {
-        return Objects.hash(roomNumber);
+        return Objects.hashCode(roomNumber);
     }
 }

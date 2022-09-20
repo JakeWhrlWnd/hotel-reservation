@@ -12,7 +12,7 @@ public class Customer {
     private static final String REGEX = "^(.+)@(.+).com$";
     private static final String NAME_REGEX = "^[A-Z]('.-)[a-z]*$";
 
-    public Customer(String firstName, String lastName, String email) {
+    public Customer(final String firstName, final String lastName, final String email) {
         isValidName(firstName);
         this.firstName = firstName;
 
@@ -23,13 +23,7 @@ public class Customer {
         this.email = email;
     }
 
-    public String getFirstName() { return firstName; } // Getter for the User's first name
-
-    public String getLastName() { return lastName; } // Getter for the User's last name
-
-    public String getEmail() {
-        return email;
-    } // Getter for the User's email
+    public String getEmail() { return email; } // Getter for the User's email
 
     private void isValidName(String name) {
         Pattern namePattern = Pattern.compile(NAME_REGEX);
@@ -51,12 +45,12 @@ public class Customer {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Customer customer)) return false;
-        return Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName) && Objects.equals(email, customer.email);
+        return Objects.equals(email, customer.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, email);
+        return Objects.hashCode(email);
     }
 
     @Override

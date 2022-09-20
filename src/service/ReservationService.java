@@ -21,17 +21,29 @@ public class ReservationService {
         }
         return reservationService;
     }
-    private static final Map<String, Collection<Reservation>> reservations = new HashMap<>();
-    private static final Map<String, IRoom> rooms = new HashMap<>();
+    private final Map<String, Collection<Reservation>> reservations = new HashMap<>();
+    private final HashMap<String, IRoom> rooms = new HashMap<>();
+
     public void addRoom(IRoom room) {
-        rooms.put(room.getRoomNumber(), room);
+        if (rooms.containsKey(room.getRoomNumber())) {
+            throw new IllegalArgumentException(room.getRoomNumber() + " already in the system.");
+        } else {
+            rooms.put(room.getRoomNumber(), room);
+        }
     }
+
     public IRoom getARoom(String roomId) {
-        return rooms.get(roomId);
+        if (rooms.containsKey(roomId)){
+            return rooms.get(roomId);
+        } else {
+            throw new IllegalArgumentException(roomId + " not in the system.");
+        }
     }
+
     public Collection<IRoom> getAllRooms() {
         return rooms.values();
     }
+
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
         Reservation reservation = new Reservation(customer, room, checkInDate, checkOutDate);
         Collection<Reservation> customerReservations = getCustomersReservation(customer);

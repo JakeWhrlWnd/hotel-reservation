@@ -9,15 +9,11 @@ public class Reservation {
     private final Date checkInDate;
     private final Date checkOutDate;
 
-    public Reservation(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
+    public Reservation(final Customer customer, final IRoom room, final Date checkInDate, final Date checkOutDate) {
         this.customer = customer;
         this.room = room;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-    }
-
-    public Customer getCustomer() {
-        return customer;
     }
 
     public IRoom getRoom() {
@@ -36,12 +32,12 @@ public class Reservation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Reservation reservation)) return false;
-        return Objects.equals(customer, reservation.customer) && Objects.equals(room, reservation.room) && Objects.equals(checkInDate, reservation.checkInDate) && Objects.equals(checkOutDate, reservation.checkOutDate);
+        return Objects.equals(room, reservation.room) && Objects.equals(checkInDate, reservation.checkInDate) && Objects.equals(checkOutDate, reservation.checkOutDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customer, room, checkInDate, checkOutDate);
+        return Objects.hash(room, checkInDate, checkOutDate);
     }
 
     @Override

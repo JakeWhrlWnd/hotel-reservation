@@ -16,11 +16,11 @@ public class AdminMenu {
             try {
                 int userInput = Integer.parseInt(scanner.nextLine());
                 switch (userInput) {
-                    case 1 -> seeAllCustomers();                      // 1. See all Customers
-                    case 2 -> seeAllRooms();                          // 2. See all Rooms
-                    case 3 -> seeAllReservations(); // 3. See all Reservations
-                    case 4 -> addRoom();                      // 4. Add a Room
-                    case 5 -> MainMenu.showMainMenu();                           // 5. Exit Application
+                    case 1 -> seeAllCustomers();        // 1. See all Customers
+                    case 2 -> seeAllRooms();            // 2. See all Rooms
+                    case 3 -> seeAllReservations();     // 3. See all Reservations
+                    case 4 -> addRoom();                // 4. Add a Room
+                    case 5 -> MainMenu.showMainMenu();  // 5. Exit Application
                     default -> throw new IllegalArgumentException("Input not valid: " + userInput);
                 }
             } catch (NumberFormatException e) {
