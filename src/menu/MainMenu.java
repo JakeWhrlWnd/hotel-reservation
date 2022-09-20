@@ -19,7 +19,7 @@ public class MainMenu {
                 int userInput = Integer.parseInt(scanner.nextLine());
                 switch (userInput) {
                     case 1 -> findAndReserveARoom();     // 1. Find and reserve a room
-                    case 2 -> getCustomerReservations();       // 2. See my reservations
+                    case 2 -> getCustomerReservations(); // 2. See my reservations
                     case 3 -> createAnAccount();         // 3. Create an account
                     case 4 -> AdminMenu.showAdminMenu(); // 4. Open the Admin Menu
                     case 5 -> flag = false;              // 5. Exit application
@@ -34,10 +34,10 @@ public class MainMenu {
     }
 
     private static void findAndReserveARoom() {
-        System.out.println("Enter check-in date: (MM/DD/YYYY)");
+        System.out.println("When would you like to check-in: (MM/DD/YYYY)");
         Date checkIn = getDateEntry();
 
-        System.out.println("Enter check-out date: (MM/DD/YYYY)");
+        System.out.println("When would you like to check-out: (MM/DD/YYYY)");
         Date checkOut = getDateEntry();
 
         if (checkIn != null && checkOut != null) {
@@ -65,7 +65,7 @@ public class MainMenu {
             return new SimpleDateFormat(BOOKING_DATA_FORMAT).parse(MainMenu.scanner.nextLine());
         } catch (ParseException e) {
             System.out.println("Invalid date");
-            findAndReserveARoom();
+            getDateEntry();
         }
         return null;
     }
@@ -92,6 +92,7 @@ public class MainMenu {
                         IRoom room = hotelResource.getRoom(roomNumber);
                         Reservation reservation = hotelResource.bookARoom(customerEmail, room, checkInDate, checkOutDate);
                         System.out.println("Reservation was created successfully!");
+                        takeABreak();
                         System.out.println(reservation);
                     } else {
                         System.out.println("Room number not available. Please, retry reservation.");
@@ -99,7 +100,7 @@ public class MainMenu {
                 }
                 showMainMenu();
             } else {
-                System.out.println("Please, create an account.");
+                System.out.println("To make a reservation, you need to create an account.");
                 createAnAccount();
             }
         } else if ("n".equals(bookARoom)) {
@@ -132,25 +133,36 @@ public class MainMenu {
     }
 
     private static void createAnAccount() {
-        System.out.println("Please enter your First name:");
-        String firstName = scanner.nextLine();
-
-        System.out.println("Please enter your Last name:");
-        String lastName = scanner.nextLine();
-
-        System.out.println("Please enter your Email: name@domain.com");
-        String email = scanner.nextLine();
-
+        String firstName = null;
+        String lastName = null;
+        String email = null;
         try {
-            hotelResource.createACustomer(email, firstName, lastName);
-            System.out.println("Welcome " + firstName + "!");
-            takeABreak();
-            System.out.println("Account created successfully!");
-            takeABreak();
+            System.out.println("Please enter your First name:");
+            firstName = scanner.nextLine();
         } catch (IllegalArgumentException e) {
             System.out.println(e.getLocalizedMessage());
-            createAnAccount();
         }
+
+        try {
+            System.out.println("Please enter your Last name:");
+            lastName = scanner.nextLine();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+
+        try {
+            System.out.println("Please enter your Email: name@domain.com");
+            email = scanner.nextLine();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+
+        hotelResource.createACustomer(email, firstName, lastName);
+        System.out.println("Welcome " + firstName + "!");
+        takeABreak();
+        System.out.println("Account created successfully!");
+        takeABreak();
+        showMainMenu();
     }
 
     public static void takeABreak() {

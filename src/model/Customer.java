@@ -9,12 +9,17 @@ public class Customer {
     private final String lastName;
     private final String email;
 
-    private static final String REGEX = "^(.+)@(.+)\\.com$";
+    private static final String REGEX = "^(.+)@(.+).com$";
+    private static final String NAME_REGEX = "^[A-Z]('.-)[a-z]*$";
 
     public Customer(String firstName, String lastName, String email) {
-        isValidEmail(email);
+        isValidName(firstName);
         this.firstName = firstName;
+
+        isValidName(lastName);
         this.lastName = lastName;
+
+        isValidEmail(email);
         this.email = email;
     }
 
@@ -26,11 +31,19 @@ public class Customer {
         return email;
     } // Getter for the User's email
 
+    private void isValidName(String name) {
+        Pattern namePattern = Pattern.compile(NAME_REGEX);
+        boolean matches = namePattern.matcher(name).matches();
+        if (!matches) {
+            throw new IllegalArgumentException("Names must be at least one character, and begin with a capitol letter.");
+        }
+    }
+
     private void isValidEmail(String email) {
         Pattern pattern = Pattern.compile(REGEX);
         boolean matches = pattern.matcher(email).matches();
         if(!matches) {
-            throw new IllegalArgumentException("Email does not match format MM/DD/YYYY");
+            throw new IllegalArgumentException("Email does not match format name@domain.com");
         }
     }
 

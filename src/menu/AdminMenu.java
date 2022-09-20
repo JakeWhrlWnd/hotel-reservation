@@ -72,7 +72,7 @@ public class AdminMenu {
         String roomNumber = scanner.nextLine();
 
         System.out.println("Enter the price per night: ");
-        double price = getRoomPrice(scanner);
+        Double price = getRoomPrice(scanner);
 
         System.out.println("Enter the room type: (1 for Single, 2 for Double)");
         RoomType roomType = getRoomType(scanner);
@@ -80,11 +80,17 @@ public class AdminMenu {
         Room newRoom = new Room(roomNumber, price, roomType);
         adminResource.addRoom(Collections.singletonList(newRoom));
         System.out.println("Room created: " + "\nRoom number: " + roomNumber + "\nPrice: $" + price + "\nRoom type: " + roomType);
+
         System.out.println("Would you like to add more rooms? (y/n)");
-        addAnotherRoom();
+        String moreRooms = scanner.nextLine();
+        if ("y".equals(moreRooms)) {
+            addAnotherRoom();
+        } else {
+            showAdminMenu();
+        }
     }
 
-    private static double getRoomPrice(Scanner scanner) {
+    private static Double getRoomPrice(Scanner scanner) {
         try {
             return Double.parseDouble(scanner.nextLine());
         } catch (NumberFormatException e) {
