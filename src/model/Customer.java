@@ -3,41 +3,69 @@ package model;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/**
+ * Customer Class
+ * Creates the Customer class
+ * @author James Norris
+ */
 public class Customer {
+    private String firstName; // Represents the Customer's firstName
+    private String lastName; // Represents the Customer's lastName
+    private String email; // Represents the Customer's email
 
-    private final String firstName;
-    private final String lastName;
-    private final String email;
+    private static final String REGEX = "^(.+)@(.+).com$"; // Constant Regular expression used to validate email
+    private static final String NAME_REGEX = "^[A-Z]('.-)[a-z]*$"; // Constant Regular expression used to validate first and last names
 
-    private static final String REGEX = "^(.+)@(.+).com$";
-    private static final String NAME_REGEX = "^[A-Z]('.-)[a-z]*$";
-
-    public Customer(final String firstName, final String lastName, final String email) {
-        isValidName(firstName);
+    /**
+     * Constructor for the Customer Class
+     * Creates a customer with a first name, last name, and an email
+     * @param firstName string, the customer's first name
+     * @param lastName string, the customer's last name
+     * @param email string, the customer's email
+     */
+    public Customer(String firstName, String lastName, String email) {
         this.firstName = firstName;
-
-        isValidName(lastName);
         this.lastName = lastName;
-
-        isValidEmail(email);
         this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        Pattern namePattern = Pattern.compile(NAME_REGEX);
+        boolean matches = namePattern.matcher(firstName).matches();
+        if (!matches) {
+            throw new IllegalArgumentException("Names must be at least one character, and begin with a capital letter.");
+        } else {
+            this.firstName = firstName;
+        }
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        Pattern namePattern = Pattern.compile(NAME_REGEX);
+        boolean matches = namePattern.matcher(lastName).matches();
+        if (!matches) {
+            throw new IllegalArgumentException("Names must be at least one character, and begin with a capital letter.");
+        } else {
+            this.lastName = lastName;
+        }
     }
 
     public String getEmail() { return email; } // Getter for the User's email
 
-    private void isValidName(String name) {
-        Pattern namePattern = Pattern.compile(NAME_REGEX);
-        boolean matches = namePattern.matcher(name).matches();
-        if (!matches) {
-            throw new IllegalArgumentException("Names must be at least one character, and begin with a capital letter.");
-        }
-    }
-
-    private void isValidEmail(String email) {
+    public void setEmail(String email) {
         Pattern pattern = Pattern.compile(REGEX);
         boolean matches = pattern.matcher(email).matches();
         if(!matches) {
             throw new IllegalArgumentException("Email does not match format name@domain.com");
+        } else {
+            this.email = email;
         }
     }
 
@@ -45,12 +73,12 @@ public class Customer {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Customer customer)) return false;
-        return Objects.equals(email, customer.email);
+        return Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName) && Objects.equals(email, customer.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(email);
+        return Objects.hash(firstName, lastName, email);
     }
 
     @Override
