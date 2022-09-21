@@ -29,7 +29,7 @@ public class Customer {
         Pattern namePattern = Pattern.compile(NAME_REGEX);
         boolean matches = namePattern.matcher(name).matches();
         if (!matches) {
-            throw new IllegalArgumentException("Names must be at least one character, and begin with a capitol letter.");
+            throw new IllegalArgumentException("Names must be at least one character, and begin with a capital letter.");
         }
     }
 

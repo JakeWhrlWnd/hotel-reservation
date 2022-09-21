@@ -8,9 +8,9 @@ import java.util.Objects;
  * @author James Norris
  */
 public class Room implements IRoom{
-    private final String roomNumber; // Represents the Room number
-    protected final Double price; // Represents the Room price
-    private final RoomType enumeration; // Represents the Room type - Single or Double
+    private String roomNumber; // Represents the Room number
+    private Double price; // Represents the Room price
+    private RoomType enumeration; // Represents the Room type - Single or Double
 
     /**
      * Constructor for the Room Class
@@ -19,7 +19,7 @@ public class Room implements IRoom{
      * @param price double, the hotel room price
      * @param enumeration string, the hotel room type - SINGLE or DOUBLE
      */
-    public Room(final String roomNumber, final Double price, final RoomType enumeration) {
+    public Room(String roomNumber, Double price, RoomType enumeration) {
         this.roomNumber = roomNumber;
         this.price = price;
         this.enumeration = enumeration;
@@ -75,12 +75,13 @@ public class Room implements IRoom{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Room room)) return false;
-        return Objects.equals(this.roomNumber, room.roomNumber);
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return Objects.equals(roomNumber, room.roomNumber) && Objects.equals(price, room.price) && enumeration == room.enumeration;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(roomNumber);
+        return Objects.hash(roomNumber, price, enumeration);
     }
 }

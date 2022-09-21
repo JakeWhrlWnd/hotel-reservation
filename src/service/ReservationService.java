@@ -22,7 +22,7 @@ public class ReservationService {
         return reservationService;
     }
     private final Map<String, Collection<Reservation>> reservations = new HashMap<>();
-    private final HashMap<String, IRoom> rooms = new HashMap<>();
+    private final Map<String, IRoom> rooms = new HashMap<>();
 
     public void addRoom(IRoom room) {
         if (rooms.containsKey(room.getRoomNumber())) {
@@ -38,10 +38,6 @@ public class ReservationService {
         } else {
             throw new IllegalArgumentException(roomId + " not in the system.");
         }
-    }
-
-    public Collection<IRoom> getAllRooms() {
-        return rooms.values();
     }
 
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {

@@ -133,36 +133,21 @@ public class MainMenu {
     }
 
     private static void createAnAccount() {
-        String firstName = null;
-        String lastName = null;
-        String email = null;
-        try {
-            System.out.println("Please enter your First name:");
-            firstName = scanner.nextLine();
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getLocalizedMessage());
-        }
+            System.out.println("Please, enter your First name:");
+            String firstName = scanner.nextLine();
 
-        try {
-            System.out.println("Please enter your Last name:");
-            lastName = scanner.nextLine();
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getLocalizedMessage());
-        }
+            System.out.println("Please, enter your Last name:");
+            String lastName = scanner.nextLine();
 
-        try {
-            System.out.println("Please enter your Email: name@domain.com");
-            email = scanner.nextLine();
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getLocalizedMessage());
-        }
+            System.out.println("Please, enter your Email: (name@domain.com)");
+            String email = scanner.nextLine();
 
-        hotelResource.createACustomer(email, firstName, lastName);
-        System.out.println("Welcome " + firstName + "!");
-        takeABreak();
-        System.out.println("Account created successfully!");
-        takeABreak();
-        showMainMenu();
+            hotelResource.createACustomer(email, firstName, lastName);
+            System.out.println("Welcome " + firstName + "!");
+            takeABreak();
+            System.out.println("Account created successfully!");
+            takeABreak();
+            showMainMenu();
     }
 
     public static void takeABreak() {

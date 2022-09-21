@@ -10,22 +10,9 @@ public enum RoomType {
     /**
      * Single room
      */
-    SINGLE("1"),
+    SINGLE,
     /**
      * Double room
      */
-    DOUBLE("2");
-
-    public final String beds;
-    RoomType(String beds) {
-        this.beds = beds;
-    }
-    public static RoomType valueForBeds(String beds) {
-        for (RoomType roomType : values()) {
-            if (roomType.beds.equals(beds)) {
-                return roomType;
-            }
-        }
-        throw new IllegalArgumentException();
-    }
+    DOUBLE
     }
