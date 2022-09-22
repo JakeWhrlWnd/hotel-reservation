@@ -35,12 +35,26 @@ public class Room implements IRoom{
     }
 
     /**
+     * Setter for the room number value
+     * @param roomNumber string
+     */
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    /**
      * Overrides the getRoomPrice method declared by the IRoom Interface
      * @return The hotel room price
      */
     @Override
-    public Double getRoomPrice() {
-        return price;
+    public Double getRoomPrice() { return price; }
+
+    /**
+     * Setter for the price value
+     * @param price double
+     */
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     /**
@@ -50,6 +64,14 @@ public class Room implements IRoom{
     @Override
     public RoomType getRoomType() {
         return enumeration;
+    }
+
+    /**
+     * Setter for enumeration value
+     * @param enumeration RoomType
+     */
+    public void setEnumeration(RoomType enumeration) {
+        this.enumeration = enumeration;
     }
 
     /**

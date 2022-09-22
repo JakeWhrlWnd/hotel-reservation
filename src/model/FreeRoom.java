@@ -7,12 +7,14 @@ package model;
 public class FreeRoom extends Room{
     /**
      * Constructor for FreeRoom Class
+     * Sets the room price to $0 - free room
      * @param roomNumber string, the hotel room number
      * @param price double, the hotel room price
      * @param enumeration string, the hotel room type - SINGLE or DOUBLE
      */
     public FreeRoom(String roomNumber, Double price, RoomType enumeration) {
-        super(roomNumber, 0.0, enumeration);
+        super(roomNumber, price, enumeration);
+        setPrice(0.0);
     }
 
     @Override

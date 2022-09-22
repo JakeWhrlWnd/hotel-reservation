@@ -26,7 +26,7 @@ public class ReservationService {
 
     public void addRoom(IRoom room) {
         if (rooms.containsKey(room.getRoomNumber())) {
-            throw new IllegalArgumentException(room.getRoomNumber() + " already in the system.");
+            throw new IllegalArgumentException("This room already exist.");
         } else {
             rooms.put(room.getRoomNumber(), room);
         }
@@ -36,8 +36,12 @@ public class ReservationService {
         if (rooms.containsKey(roomId)){
             return rooms.get(roomId);
         } else {
-            throw new IllegalArgumentException(roomId + " not in the system.");
+            throw new IllegalArgumentException("This room does not exist.");
         }
+    }
+
+    public Collection<IRoom> getAllRooms() {
+        return rooms.values();
     }
 
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
