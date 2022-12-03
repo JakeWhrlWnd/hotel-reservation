@@ -101,10 +101,10 @@ public class AdminMenu {
 
     private static RoomType getRoomType(Scanner scanner) {
         try {
-            if (getRoomType("1")) { return RoomType.SINGLE; }
+            if (getRoomType()) { return RoomType.SINGLE; }
             else if () { return RoomType.DOUBLE; }
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid room type: input 1 for single or 2 for double");
+            System.out.println("Invalid room type: input Single or Double");
             return getRoomType(scanner);
         }
     }

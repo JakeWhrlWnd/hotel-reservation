@@ -1,9 +1,11 @@
 package menu;
 
 import api.HotelResource;
+import model.Customer;
 import model.IRoom;
 import model.Reservation;
 
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -70,43 +72,31 @@ public class MainMenu {
         return null;
     }
 
-    private static void reserveARoom(Scanner scanner, Date checkInDate, Date checkOutDate, Collection<IRoom> rooms) {
-        System.out.println("Would you like to book a room? (y/n)");
-        String bookARoom = scanner.nextLine();
+    private static void reserveARoom(Date checkInDate, Date checkOutDate, Collection<IRoom> rooms) {
+        final boolean isAccountExist = Menu.isYesResponse("Do you have an account with us? (y/n)");
+        if (!isAccountExist) {
+            System.out.println("Please create an account");
+            return;
+        }
 
-        if ("y".equals(bookARoom)) {
-            System.out.println("Do you have an account with us? (y/n)");
-            String accountStatus = scanner.nextLine();
+        System.out.println("Enter account email (format: name@domain.com)");
+        final String enteredEmail = scanner.nextLine();
 
-            if ("y".equals(accountStatus)) {
-                System.out.println("Enter your email: name@domain.com");
-                String customerEmail = scanner.nextLine();
+        if (hotelResource.getCustomer(enteredEmail) == null) {
+            System.out.println("Customer not found. Please create an account");
+            return;
+        }
 
-                if (hotelResource.getCustomer(customerEmail) == null) {
-                    System.out.println("Account not found. Please, create a new account.");
-                } else {
-                    System.out.println("What room would you like to reserve?");
-                    String roomNumber = scanner.nextLine();
+        final String reserveRoomNumber = getRoomNumber(availableRooms);
 
-                    if (rooms.stream().anyMatch(room -> room.getRoomNumber().equals(roomNumber))) {
-                        IRoom room = hotelResource.getRoom(roomNumber);
-                        Reservation reservation = hotelResource.bookARoom(customerEmail, room, checkInDate, checkOutDate);
-                        System.out.println("Reservation was created successfully!");
-                        takeABreak();
-                        System.out.println(reservation);
-                    } else {
-                        System.out.println("Room number not available. Please, retry reservation.");
-                    }
-                }
-                showMainMenu();
-            } else {
-                System.out.println("To make a reservation, you need to create an account.");
-                createAnAccount();
-            }
-        } else if ("n".equals(bookARoom)) {
+        Reservation reservation = hotelResource.bookARoom(enteredEmail, reserveRoomNumber, checkInDate, checkOutDate);
+
+        if (reservation != null) {
+            System.out.println("Reservation successful! Enjoy your stay");
+            takeABreak();
+            System.out.println(reservation);
+            takeABreak();
             showMainMenu();
-        } else {
-            reserveARoom(scanner, checkInDate, checkOutDate, rooms);
         }
     }
 
@@ -133,21 +123,73 @@ public class MainMenu {
     }
 
     private static void createAnAccount() {
-            System.out.println("Please, enter your First name:");
-            String firstName = scanner.nextLine();
+        final String email = getEmail();
+        final String firstName = getFirstName();
+        final String lastName = getLastName();
 
-            System.out.println("Please, enter your Last name:");
-            String lastName = scanner.nextLine();
+        hotelResource.createACustomer(firstName, lastName, email);
+        System.out.println("Welcome " + firstName + "!");
+        takeABreak();
+        System.out.println("Account created successfully!");
+        takeABreak();
+        showMainMenu();
+    }
 
+    private static String getEmail() {
+        boolean isError;
+        String email;
+
+        do {
+            isError = false;
             System.out.println("Please, enter your Email: (name@domain.com)");
-            String email = scanner.nextLine();
+            email = scanner.nextLine();
+            if (Customer.emailMatches(email, Customer.REGEX)) {
+                isError = true;
+            } else if (hotelResource.getCustomer(email) != null) {
+                System.out.println("Customer already exists");
+                isError = true;
+            }
+        } while (isError);
 
-            hotelResource.createACustomer(email, firstName, lastName);
-            System.out.println("Welcome " + firstName + "!");
-            takeABreak();
-            System.out.println("Account created successfully!");
-            takeABreak();
-            showMainMenu();
+        return email;
+    }
+
+    private static String getFirstName() {
+        boolean isError;
+        String firstName;
+
+        do {
+            isError = false;
+            System.out.println("Please, enter your First name:");
+            firstName = scanner.nextLine();
+            if (Customer.nameMatches(firstName, Customer.NAME_REGEX)) {
+                isError = true;
+            } else if (hotelResource.getCustomer(firstName) != null) {
+                System.out.println("Customer already exists");
+                isError = true;
+            }
+        } while (isError);
+
+        return firstName;
+    }
+
+    private static String getLastName() {
+        boolean isError;
+        String lastName;
+
+        do {
+            isError = false;
+            System.out.println("Please, enter your Last name:");
+            lastName = scanner.nextLine();
+            if (Customer.nameMatches(lastName, Customer.NAME_REGEX)) {
+                isError = true;
+            } else if (hotelResource.getCustomer(lastName) != null) {
+                System.out.println("Customer already exists");
+                isError = true;
+            }
+        } while (isError);
+
+        return lastName;
     }
 
     public static void takeABreak() {

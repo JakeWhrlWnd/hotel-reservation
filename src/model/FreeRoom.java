@@ -13,8 +13,12 @@ public class FreeRoom extends Room{
      * @param enumeration string, the hotel room type - SINGLE or DOUBLE
      */
     public FreeRoom(String roomNumber, Double price, RoomType enumeration) {
-        super(roomNumber, price, enumeration);
-        setPrice(0.0);
+        super(roomNumber, 0.0, enumeration);
+    }
+
+    @Override
+    public boolean isFree() {
+        return true;
     }
 
     @Override

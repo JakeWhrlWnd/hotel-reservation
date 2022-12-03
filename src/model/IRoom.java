@@ -1,4 +1,8 @@
 package model;
+
+import java.util.Date;
+import java.util.List;
+
 /**
  * IRoom interface
  * Groups the methods needed to be implemented by the Room Class
@@ -33,5 +37,7 @@ public interface IRoom {
      * @return whether the room is free
      */
     boolean isFree();
+
+    List<Pair<Date, Date>> getBookedDates();
 }
 

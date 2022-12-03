@@ -2,13 +2,12 @@ package api;
 
 import model.Customer;
 import model.IRoom;
+import model.Pair;
 import model.Reservation;
 import service.CustomerService;
 import service.ReservationService;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 public class HotelResource {
     /**
@@ -26,40 +25,81 @@ public class HotelResource {
 
     private final CustomerService customerService = CustomerService.getInstance();
     private final ReservationService reservationService = ReservationService.getInstance();
+    private final AdminResource adminResource = AdminResource.getInstance();
 
     public Customer getCustomer(String email) {
         return customerService.getCustomer(email);
     }
 
     public void createACustomer(String email, String firstName, String lastName) {
-        customerService.addCustomer(email, firstName, lastName);
+        try {
+            Customer customer = new Customer(firstName, lastName, email);
+            customerService.addCustomer(customer);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Email is not valid. Please, create an account with a valid email");
+        }
     }
 
     public IRoom getRoom(String roomNumber) {
         return reservationService.getARoom(roomNumber);
     }
 
-    public Reservation bookARoom(String customerEmail, IRoom room, Date checkInDate, Date checkOutDate) {
-        return reservationService.reserveARoom(getCustomer(customerEmail), room, checkInDate, checkOutDate);
+    public Reservation bookARoom(String customerEmail, String roomId, Date checkInDate, Date checkOutDate) {
+        Customer customer = adminResource.getCustomer(customerEmail);
+
+        IRoom room = hotelResource.getRoom(roomId);
+
+        Reservation reservation = new Reservation(customer, room, checkInDate, checkOutDate);
+        room.getBookedDates().add(Pair.createPair(checkInDate, checkOutDate));
+        reservationService.reserveARoom(reservation);
+        return reservation;
     }
 
-    public Collection<Reservation> getCustomersReservations(String customerEmail) {
-        Customer customer = getCustomer(customerEmail);
-        if (customer == null) {
-            return Collections.emptyList();
+    public Collection<IRoom> findAvailableRooms(Date checkIn, Date checkOut) {
+        List<IRoom> availableRooms = new ArrayList<>();
+        Collection<IRoom> allRooms = reservationService.getAllRooms().values();
+
+        for (IRoom room : allRooms) {
+            if (room.getBookedDates().size() == 0) {
+                availableRooms.add(room);
+                continue;
+            }
+
+            boolean isSuitable = false;
+            for (Pair<Date, Date> bookedDates : room.getBookedDates()) {
+                if (!isInBookedRange(checkIn, checkOut, bookedDates) && !isOutBookedRange(checkIn, checkOut, bookedDates)) {
+                    isSuitable = true;
+                } else {
+                    isSuitable = false;
+                    break;
+                }
+            }
+            if (isSuitable) {
+                availableRooms.add(room);
+            }
         }
-        return reservationService.getCustomersReservation(getCustomer(customerEmail));
+        return availableRooms;
     }
 
-    public Collection<IRoom> findARoom(Date checkIn, Date checkOut) {
-        return reservationService.findRooms(checkIn, checkOut);
+    private boolean isInBookedRange(Date checkIn, Date checkOut, Pair<Date, Date> bookedDates) {
+        if ((checkIn.equals(bookedDates.getBookedCheckIn()) || checkIn.after(bookedDates.getBookedCheckIn())) && (checkIn.equals(bookedDates.getBookedCheckOut()) || checkIn.before(bookedDates.getBookedCheckOut()))) {
+            return true;
+        }
+        return (checkOut.equals(bookedDates.getBookedCheckIn()) || checkOut.after(bookedDates.getBookedCheckIn())) && (checkOut.equals(bookedDates.getBookedCheckOut()) || checkOut.before(bookedDates.getBookedCheckOut()));
     }
 
-    public Collection<IRoom> findAlternateRooms(Date checkIn, Date checkOut) {
-        return reservationService.findAlternateRooms(checkIn, checkOut);
+    private boolean isOutBookedRange(Date checkIn, Date checkOut, Pair<Date, Date> bookedDates) {
+        return checkIn.before(bookedDates.getBookedCheckIn()) && checkOut.after(bookedDates.getBookedCheckOut());
     }
 
-    public Date addPlusDays(Date date) {
-        return reservationService.addPlusDays(date);
+    public Collection<Reservation> getCustomerReservation(String email) {
+        return reservationService.getCustomerReservation(email);
+    }
+
+    public Date addDefaultDays(final Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DAY_OF_MONTH, 7);
+        return c.getTime();
     }
 }

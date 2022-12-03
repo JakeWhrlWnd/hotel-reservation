@@ -22,8 +22,7 @@ public class CustomerService {
 
     private final Map<String, Customer> customers = new HashMap<>();
 
-    public void addCustomer(String email, String firstName, String lastName) {
-        Customer customer = new Customer(firstName, lastName, email);
+    public void addCustomer(Customer customer) {
         customers.put(customer.getEmail(), customer);
     }
 
@@ -31,7 +30,7 @@ public class CustomerService {
         return customers.get(customerEmail);
     }
 
-    public Collection<Customer> getAllCustomers() {
-        return customers.values();
+    public Map<String, Customer> getAllCustomers() {
+        return customers;
     }
 }

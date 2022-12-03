@@ -1,10 +1,10 @@
 package api;
 
-import model.Customer;
-import model.IRoom;
+import model.*;
 import service.CustomerService;
 import service.ReservationService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,15 +28,32 @@ public class AdminResource {
         return customerService.getCustomer(email);
     }
 
-    public void addRoom(List<IRoom> rooms) { rooms.forEach(reservationService::addRoom); }
+    public void addRoom(String roomNumber, double price, int roomType) {
+        RoomType rType;
+        if (roomType == 1) {
+            rType = RoomType.SINGLE;
+        } else {
+            rType = RoomType.DOUBLE;
+        }
+
+        Room room = new Room(roomNumber, price, rType);
+        reservationService.addRoom(room);
+    }
 
     public Collection<IRoom> getAllRooms() {
-        return reservationService.getAllRooms();
+        return reservationService.getAllRooms().values();
     }
 
     public Collection<Customer> getAllCustomers() {
-        return customerService.getAllCustomers();
+        return customerService.getAllCustomers().values();
     }
 
-    public void displayAllReservations() { reservationService.printAllReservation(); }
+    public Collection<Reservation> getAllReservations() {
+        List<Reservation> allReservations = new ArrayList<>();
+        Collection<List<Reservation>> reservations = reservationService.getAllReservations().values();
+        for (List<Reservation> reservationList : reservations) {
+            allReservations.addAll(reservationList);
+        }
+        return allReservations;
+    }
 }
