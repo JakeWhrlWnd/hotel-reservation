@@ -13,7 +13,7 @@ public class Customer {
     private String lastName; // Represents the Customer's lastName
     private String email; // Represents the Customer's email
 
-    public static final String REGEX = "^(.+)@(.+).com$"; // Constant Regular expression used to validate email
+    public static final String EMAIL_REGEX = "^(.+)@(.+).com$"; // Constant Regular expression used to validate email
     public static final String NAME_REGEX = "^[A-Z]('.-)[a-z]*$"; // Constant Regular expression used to validate first and last names
 
     /**
@@ -24,17 +24,17 @@ public class Customer {
      * @param email     string, the customer's email
      */
     public Customer(String firstName, String lastName, String email) {
-        if (nameMatches(firstName, Customer.NAME_REGEX)) {
+        if (!nameMatches(firstName, Customer.NAME_REGEX)) {
             throw new IllegalArgumentException("Name is not valid");
         }
         this.firstName = firstName;
 
-        if (nameMatches(lastName, Customer.NAME_REGEX)) {
+        if (!nameMatches(lastName, Customer.NAME_REGEX)) {
             throw new IllegalArgumentException("Name is not valid");
         }
         this.lastName = lastName;
 
-        if (emailMatches(email, Customer.REGEX)) {
+        if (!emailMatches(email, Customer.EMAIL_REGEX)) {
             throw new IllegalArgumentException("Email is not valid");
         }
         this.email = email;
@@ -102,11 +102,11 @@ public class Customer {
     }
 
     public static boolean emailMatches(String checkedValue, String regexPattern) {
-        return !Pattern.compile(regexPattern).matcher(checkedValue).matches();
+        return Pattern.compile(regexPattern).matcher(checkedValue).matches();
     }
 
     public static boolean nameMatches(String checkedValue, String regexPattern) {
-        return !Pattern.compile(regexPattern).matcher(checkedValue).matches();
+        return Pattern.compile(regexPattern).matcher(checkedValue).matches();
     }
 
     /**

@@ -96,6 +96,15 @@ public class HotelResource {
         return reservationService.getCustomerReservation(email);
     }
 
+    public boolean isRoomExistInAvailable(String roomNumber, Collection<IRoom> availableRooms) {
+        for (IRoom availableRoom : availableRooms) {
+            if (roomNumber.equals(availableRoom.getRoomNumber())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Date addDefaultDays(final Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);

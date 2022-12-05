@@ -64,70 +64,65 @@ public class AdminMenu {
     }
 
     private static void seeAllReservations() {
-        adminResource.displayAllReservations();
+        adminResource.getAllReservations();
     }
 
     private static void addRoom() {
-        System.out.println("Enter the room number:");
-        String roomNumber = scanner.nextLine();
+        final String roomNumber = getRoomNumber();
+        final double price = getRoomPrice();
+        int roomType = getRoomType();
 
-        System.out.println("Enter the price per night: ");
-        Double price = getRoomPrice(scanner);
-
-        System.out.println("Enter the room type: (1 for Single, 2 for Double)");
-        RoomType roomType = getRoomType(scanner);
-
-        Room newRoom = new Room(roomNumber, price, roomType);
-        adminResource.addRoom(Collections.singletonList(newRoom));
+        adminResource.addRoom(roomNumber, price, roomType);
         System.out.println("Room created: " + "\nRoom number: " + roomNumber + "\nPrice: $" + price + "\nRoom type: " + roomType);
 
         System.out.println("Would you like to add more rooms? (y/n)");
         String moreRooms = scanner.nextLine();
         if ("y".equals(moreRooms)) {
-            addAnotherRoom();
+            addRoom();
         } else {
             showAdminMenu();
         }
     }
 
-    private static Double getRoomPrice(Scanner scanner) {
-        try {
-            return Double.parseDouble(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid price: input requires a decimal point");
-            return getRoomPrice(scanner);
-        }
+    private static String getRoomNumber() {
+        String roomNumber;
+
+        do {
+            System.out.println("Enter the room number:");
+            roomNumber = scanner.nextLine();
+        } while (roomNumber.isBlank());
+
+        return roomNumber;
     }
 
-    private static RoomType getRoomType(Scanner scanner) {
-        try {
-            if (getRoomType()) { return RoomType.SINGLE; }
-            else if () { return RoomType.DOUBLE; }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid room type: input Single or Double");
-            return getRoomType(scanner);
-        }
+    private static Double getRoomPrice() {
+        double price;
+        boolean isError ;
+
+        do {
+            isError = false;
+            System.out.println("Enter the price per night: ");
+            while(!scanner.hasNextDouble()) {
+                System.out.println("Enter");
+                scanner.next();
+            }
+            price = scanner.nextDouble();
+            if (price < 0) {
+                isError = true;
+                System.out.println("Price can't be less than 0");
+            }
+        } while (isError);
+
+        return price;
     }
 
-    private static void addAnotherRoom() {
-        try {
-            String anotherRoom = scanner.nextLine();
-
-            while ((anotherRoom.charAt(0) != 'y' && anotherRoom.charAt(0) != 'n') || anotherRoom.length() != 1) {
-                System.out.println("Please enter y (yes) / n (no).");
-                anotherRoom = scanner.nextLine();
-            }
-
-            if (anotherRoom.charAt(0) == 'y') {
-                addRoom();
-            } else if (anotherRoom.charAt(0) == 'n') {
-                showAdminMenu();
-            } else {
-                addAnotherRoom();
-            }
-        } catch (StringIndexOutOfBoundsException e) {
-            addAnotherRoom();
+    private static int getRoomType() {
+        System.out.println("Enter the room type: (1 for Single, 2 for Double)");
+        while (!scanner.hasNext("[12]")) {
+            System.out.println("Please enter a 1 (Single) or a 2 (Double)");
+            scanner.next();
         }
+        return Integer.parseInt(scanner.next());
     }
 
     protected static boolean flag = true;
