@@ -2,7 +2,6 @@ package service;
 
 import model.Customer;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +21,7 @@ public class CustomerService {
 
     private final Map<String, Customer> customers = new HashMap<>();
 
-    public void addCustomer(Customer customer) {
-        customers.put(customer.getEmail(), customer);
-    }
+    public void addCustomer(Customer customer) { customers.put(customer.getEmail(), customer); }
 
     public Customer getCustomer(String customerEmail) {
         return customers.get(customerEmail);

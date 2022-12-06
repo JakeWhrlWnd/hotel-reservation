@@ -1,7 +1,6 @@
 package menu;
 
 import api.HotelResource;
-import model.Customer;
 import model.IRoom;
 import model.Reservation;
 
@@ -164,60 +163,18 @@ public class MainMenu {
     }
 
     private static String getEmail() {
-        boolean isError;
-        String email;
-
-        do {
-            isError = false;
-            System.out.println("Please, enter your Email: (name@domain.com)");
-            email = scanner.nextLine();
-            if (Customer.emailMatches(email, Customer.EMAIL_REGEX)) {
-                isError = true;
-            } else if (hotelResource.getCustomer(email) != null) {
-                System.out.println("Customer already exists");
-                isError = true;
-            }
-        } while (isError);
-
-        return email;
+        System.out.println("Please, enter your Email: (name@domain.com)");
+        return scanner.nextLine();
     }
 
     private static String getFirstName() {
-        boolean isError;
-        String firstName;
-
-        do {
-            isError = false;
-            System.out.println("Please, enter your First name:");
-            firstName = scanner.nextLine();
-            if (Customer.nameMatches(firstName, Customer.NAME_REGEX)) {
-                isError = true;
-            } else if (hotelResource.getCustomer(firstName) != null) {
-                System.out.println("Customer already exists");
-                isError = true;
-            }
-        } while (isError);
-
-        return firstName;
+        System.out.println("Please, enter your First name:");
+        return scanner.nextLine();
     }
 
     private static String getLastName() {
-        boolean isError;
-        String lastName;
-
-        do {
-            isError = false;
-            System.out.println("Please, enter your Last name:");
-            lastName = scanner.nextLine();
-            if (Customer.nameMatches(lastName, Customer.NAME_REGEX)) {
-                isError = true;
-            } else if (hotelResource.getCustomer(lastName) != null) {
-                System.out.println("Customer already exists");
-                isError = true;
-            }
-        } while (isError);
-
-        return lastName;
+        System.out.println("Please, enter your Last name:");
+        return scanner.nextLine();
     }
 
     public static void takeABreak() {
