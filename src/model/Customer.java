@@ -25,20 +25,24 @@ public class Customer {
      */
     public Customer(String firstName, String lastName, String email) {
         Pattern namePattern = Pattern.compile(NAME_REGEX);
+        Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
+
         if (!namePattern.matcher(firstName).matches()) {
-            throw new IllegalArgumentException("Email is not valid.");
+            throw new IllegalArgumentException ("Name is not valid. Name must begin with a capital latter.");
         }
+
         this.firstName = firstName;
 
         if (!namePattern.matcher(lastName).matches()) {
-            throw new IllegalArgumentException("Email is not valid.");
+            throw new IllegalArgumentException ("Name is not valid. Name must begin with a capital latter.");
         }
+
         this.lastName = lastName;
 
-        Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
         if (!emailPattern.matcher(email).matches()) {
-            throw new IllegalArgumentException("Email is not valid.");
+            throw new IllegalArgumentException ("Email is not valid. Format must be name@domain.com");
         }
+
         this.email = email;
     }
 

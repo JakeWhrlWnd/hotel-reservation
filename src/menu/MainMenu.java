@@ -163,8 +163,14 @@ public class MainMenu {
     }
 
     private static String getEmail() {
+        String email = null;
         System.out.println("Please, enter your Email: (name@domain.com)");
-        return scanner.nextLine();
+        try {
+            email = scanner.nextLine();
+        } catch (IllegalArgumentException e) {
+            e.getMessage();
+        }
+        return email;
     }
 
     private static String getFirstName() {

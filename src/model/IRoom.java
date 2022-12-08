@@ -37,7 +37,5 @@ public interface IRoom {
      * @return whether the room is free
      */
     boolean isFree();
-
-    List<Pair<Date, Date>> getBookedDates();
 }
 
