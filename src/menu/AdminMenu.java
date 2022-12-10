@@ -6,8 +6,8 @@ import model.*;
 import java.util.*;
 
 public class AdminMenu {
-    private static final AdminResource adminResource = AdminResource.getInstance();
 
+    private static Collection<Customer> allCustomers = AdminResource.getAllCustomers();
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void showAdminMenu() {
@@ -63,66 +63,75 @@ public class AdminMenu {
         }
     }
 
+    //Option #3
     private static void seeAllReservations() {
-        adminResource.getAllReservations();
+        AdminResource.displayAllReservations();
     }
 
     private static void addRoom() {
-        final String roomNumber = getRoomNumber();
-        final double price = getRoomPrice();
-        int roomType = getRoomType();
+        List<IRoom> rooms = new LinkedList<>();
 
-        adminResource.addRoom(roomNumber, price, roomType);
-        System.out.println("Room created: " + "\nRoom number: " + roomNumber + "\nPrice: $" + price + "\nRoom type: " + roomType);
+        while (!flag) {
+            IRoom room;
 
-        System.out.println("Would you like to add more rooms? (y/n)");
-        String moreRooms = scanner.nextLine();
-        if ("y".equals(moreRooms)) {
-            addRoom();
-        } else {
-            showAdminMenu();
-        }
-    }
-
-    private static String getRoomNumber() {
-        String roomNumber;
-
-        do {
-            System.out.println("Enter the room number:");
-            roomNumber = scanner.nextLine();
-        } while (roomNumber.isBlank());
-
-        return roomNumber;
-    }
-
-    private static Double getRoomPrice() {
-        double price;
-        boolean isError ;
-
-        do {
-            isError = false;
-            System.out.println("Enter the price per night: ");
-            while(!scanner.hasNextDouble()) {
-                System.out.println("Enter");
-                scanner.next();
+            //Room Number
+            String roomNumber = "";
+            boolean hasRoomNumber = false;
+            while (!hasRoomNumber) {
+                System.out.println("Enter the Room number: (Must be greater than 0)");
+                try {
+                    roomNumber = scanner.next();
+                    hasRoomNumber = true;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Negative numbers and 0 not acceptable Room numbers");
+                }
             }
-            price = scanner.nextDouble();
-            if (price < 0) {
-                isError = true;
-                System.out.println("Price can't be less than 0");
-            }
-        } while (isError);
+            //Room Price
+            Double price = "0.0";
+            boolean hasPrice = false;
+            while (!hasPrice) {
+                System.out.println("Enter the Room price: ");
+                try {
+                    price = scanner.nextDouble();
+                    hasPrice = price > 0;
+                } catch (InputMismatchException e) {
 
-        return price;
+                }
+            }
+            //Room Type
+            RoomType roomType = null;
+            boolean hasRoomType = false;
+            while (!hasRoomType) {
+
+            }
+            room = new Room(roomNumber, price, roomType);
+            rooms.add(room);
+            System.out.println("Success! Room " + roomNumber + "was created.");
+            takeABreak();
+            System.out.println("Would you like to add another room? (Y(es)/N(o))");
+            String answer = scanner.next().substring(0,1).toLowerCase();
+            try {
+                switch (answer) {
+                    case "y":
+                        scanner.nextLine();
+                        addRoom();
+                    case "n":
+                        flag = true;
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Please, enter a Y(es) or N(o).");
+            }
+        }
+
+        AdminResource.addRoom(rooms);
     }
 
-    private static int getRoomType() {
-        System.out.println("Enter the room type: (1 for Single, 2 for Double)");
-        while (!scanner.hasNext("[12]")) {
-            System.out.println("Please enter a 1 (Single) or a 2 (Double)");
-            scanner.next();
+    public static void takeABreak() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        return Integer.parseInt(scanner.next());
     }
 
     protected static boolean flag = true;
