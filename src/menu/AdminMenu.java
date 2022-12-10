@@ -32,34 +32,15 @@ public class AdminMenu {
     }
 
     private static void seeAllCustomers() {
-        Collection<Customer> customers = adminResource.getAllCustomers();
-
-        if (!customers.isEmpty()) {
-            adminResource.getAllCustomers().forEach(System.out::println);
-        } else {
-            System.out.println("No customers were found.");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            showAdminMenu();
+        for (Customer customer: allCustomers) {
+            System.out.println(customer);
         }
     }
 
     private static void seeAllRooms() {
-        Collection<IRoom> rooms = adminResource.getAllRooms();
-
-        if (!rooms.isEmpty()) {
-            adminResource.getAllRooms().forEach(System.out::println);
-        } else {
-            System.out.println("No rooms were found.");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            showAdminMenu();
+        Collection<IRoom> allRooms = AdminResource.getAllRooms();
+        for (IRoom room : allRooms) {
+            System.out.println(room);
         }
     }
 
@@ -78,7 +59,10 @@ public class AdminMenu {
             String roomNumber = "";
             boolean hasRoomNumber = false;
             while (!hasRoomNumber) {
-                System.out.println("Enter the Room number: (Must be greater than 0)");
+                System.out.println("""
+                Enter the Room number:
+                (Must be greater than 0)
+                """);
                 try {
                     roomNumber = scanner.next();
                     hasRoomNumber = true;
@@ -87,23 +71,42 @@ public class AdminMenu {
                 }
             }
             //Room Price
-            Double price = "0.0";
+            double price = 0.0;
             boolean hasPrice = false;
             while (!hasPrice) {
-                System.out.println("Enter the Room price: ");
+                System.out.println("""
+                Enter the Room price:
+                (Format must be X.XX)
+                """);
                 try {
                     price = scanner.nextDouble();
                     hasPrice = price > 0;
                 } catch (InputMismatchException e) {
-
+                    System.out.println("Price must be in format X.XX");
+                    scanner.nextLine();
                 }
             }
             //Room Type
             RoomType roomType = null;
             boolean hasRoomType = false;
             while (!hasRoomType) {
-
+                System.out.println("""
+                        Select Room type:
+                        1 for Single Room
+                        2 for Double Room
+                        """);
+                int userInput = Integer.parseInt(scanner.nextLine());
+                hasRoomType = (userInput == 1 || userInput == 2);
+                if (hasRoomType) {
+                    switch (userInput) {
+                        case 1 -> roomType = RoomType.SINGLE;
+                        case 2 -> roomType = RoomType.DOUBLE;
+                    }
+                } else {
+                    System.out.println("Please choose from option 1 or 2.");
+                }
             }
+
             room = new Room(roomNumber, price, roomType);
             rooms.add(room);
             System.out.println("Success! Room " + roomNumber + "was created.");
@@ -124,6 +127,8 @@ public class AdminMenu {
         }
 
         AdminResource.addRoom(rooms);
+        takeABreak();
+        showAdminMenu();
     }
 
     public static void takeABreak() {
