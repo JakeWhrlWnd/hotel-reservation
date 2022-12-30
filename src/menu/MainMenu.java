@@ -172,7 +172,7 @@ public class MainMenu {
         MainMenu.customer = customer;
     }
 
-    private static final String DATE_FORMAT = "MM/dd/yyyy";
+    protected static final String DATE_FORMAT = "MM/dd/yyyy";
 
     protected static final String MAIN_MENU_TEXT = """
             Welcome to the Hotel Reservation Application
@@ -190,6 +190,16 @@ public class MainMenu {
             -----------------------------------------------
             1. Reserve a room
             2. Enter new dates
+            3. Return to the main menu
+            4. Exit
+            -----------------------------------------------
+            Please choose an option from the menu""";
+
+    protected static final String OPTIONS_MENU_2 = """
+            What would you like to do?
+            -----------------------------------------------
+            1. Login to account
+            2. Create a new account
             3. Return to the main menu
             4. Exit
             -----------------------------------------------
