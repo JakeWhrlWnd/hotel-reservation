@@ -3,6 +3,7 @@ package menu;
 import api.HotelResource;
 import api.AdminResource;
 import com.sun.net.httpserver.Authenticator;
+import com.sun.tools.javac.Main;
 import model.Customer;
 import model.IRoom;
 import model.Reservation;
@@ -13,10 +14,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+import static api.HotelResource.findARoom;
+
 public class MainMenu {
     private static final Scanner scanner = new Scanner(System.in);
     public static void showMainMenu() {
-        System.out.println(mainMenuTxt);
+        System.out.println(MAIN_MENU_TEXT);
         while (flag) {
             try {
                 int userInput = Integer.parseInt(scanner.nextLine());
@@ -37,12 +40,68 @@ public class MainMenu {
     }
 
     private static void findAndReserveARoom() {
-        Do you have an account?
-            If yes, then login with email
-                If email is not recognized - create an account
-                If email is recognized - Welcome back message
-            If no, then create an account
+        boolean isReserved = false;
 
+        while(!isReserved) {
+            Collection<IRoom> availableRooms = findARoom();
+
+            Map<Integer, IRoom> countRooms = new HashMap<>();
+            int item = 1;
+            for (IRoom room : availableRooms) {
+                countRooms.put(item, room);
+                item++;
+            }
+
+            int numberOfRooms = countRooms.size();
+
+            while (availableRooms.isEmpty()) {
+                Calendar calendar = Calendar.getInstance();
+
+                calendar.setTime(checkInDate);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                Date newCheckInDate = Date.from(calendar.toInstant());
+
+                calendar.setTime(checkOutDate);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                Date newCheckOutDate = Date.from(calendar.toInstant());
+
+                availableRooms = HotelResource.findARoom(newCheckInDate, newCheckOutDate);
+
+                System.out.println("There are no more available rooms from " + standardDate.format(checkInDate) + " to " + standardDate.format(checkOutDate));
+                System.out.println("Here are some optional dates available" + standardDate.format(newCheckInDate) + " to " + standardDate.format(newCheckOutDate));
+            }
+
+            System.out.println(OPTIONS_MENU_1);
+            while (flag) {
+                try {
+                    int userInput = Integer.parseInt(scanner.nextLine());
+                    switch (userInput) {
+                        case 1 -> findAndReserveARoom();     // 1. Reserve a room
+                        case 2 -> getCustomerReservations(); // 2. Enter new dates
+                        case 3 -> MainMenu.showMainMenu(); // 4. Open the Main Menu
+                        case 4 -> flag = false;              // 4. Exit application
+                        default -> throw new IllegalArgumentException("Invalid input. Please, enter a number between 1 and 4.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Only numbers accepted.");
+                } catch (Throwable e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            boolean optionIsValid = false;
+
+            while (!optionIsValid) {
+                try {
+                    System.out.println("Please choose a number from the list.");
+                    option = scanner.nextInt();
+                    optionIsValid = (option >= 1) && (option <= numberOfRooms);
+                    if (!optionIsValid) {
+                        System
+                    }
+                }
+            }
+        }
     }
 
     private static void getCustomerReservations() {
@@ -112,11 +171,10 @@ public class MainMenu {
     public static void setCustomer(Customer customer) {
         MainMenu.customer = customer;
     }
-    public staic Customer getCustomer() {
-        return customer;
-    }
 
-    protected static final String mainMenuTxt = """
+    private static final String DATE_FORMAT = "MM/dd/yyyy";
+
+    protected static final String MAIN_MENU_TEXT = """
             Welcome to the Hotel Reservation Application
             -----------------------------------------------
             1. Find and Reserve a room
@@ -124,6 +182,16 @@ public class MainMenu {
             3. Create an account
             4. Admin
             5. Exit
+            -----------------------------------------------
+            Please choose an option from the menu""";
+
+    protected static final String OPTIONS_MENU_1 = """
+            What would you like to do?
+            -----------------------------------------------
+            1. Reserve a room
+            2. Enter new dates
+            3. Return to the main menu
+            4. Exit
             -----------------------------------------------
             Please choose an option from the menu""";
 }
