@@ -12,7 +12,8 @@ public class Customer {
     private String firstName; // Represents the Customer's firstName
     private String lastName; // Represents the Customer's lastName
     private String email; // Represents the Customer's email
-
+    private final String EMAIL_REGEX = "^(.+)@(.+).com$"; // Constant Regular expression used to validate email
+    private final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
     /**
      * Constructor for the Customer Class
      * Creates a customer with a first name, last name, and an email
@@ -21,9 +22,6 @@ public class Customer {
      * @param email     string, the customer's email
      */
     public Customer(String firstName, String lastName, String email) {
-        // Constant Regular expression used to validate email
-        String EMAIL_REGEX = "^(.+)@(.+).com$";
-        Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
         this.firstName = firstName;
         this.lastName = lastName;
         if (!emailPattern.matcher(email).matches()) {

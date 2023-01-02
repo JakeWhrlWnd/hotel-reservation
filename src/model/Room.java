@@ -1,8 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -14,8 +11,6 @@ public class Room implements IRoom{
     private String roomNumber; // Represents the Room number
     private Double price; // Represents the Room price
     private RoomType enumeration; // Represents the Room type - Single or Double
-
-    private List<Pair<Date, Date>> bookedDates = new ArrayList<>();
 
     /**
      * Constructor for the Room Class
@@ -86,15 +81,6 @@ public class Room implements IRoom{
     @Override
     public boolean isFree() {
         return false;
-    }
-
-    /**
-     * Overrides the getBookedDates method declared in IRoom interface
-     * @return Pairing of booked dates
-     */
-    @Override
-    public List<Pair<Date, Date>> getBookedDates() {
-        return bookedDates;
     }
 
     /**

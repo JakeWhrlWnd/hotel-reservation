@@ -31,44 +31,39 @@ public class AdminMenu {
             -----------------------------------------------
             Enter the Room price:
             (Format must be X.XX) - example 123.00
-            -----------------------------------------------
-            """;
+            -----------------------------------------------""";
     protected static final String ROOM_TYPE_MENU = """
             ROOM TYPE MENU
             -----------------------------------------------
             Select the type of room.
             Enter 1 for a Single Room
             Enter 2 for a Double Room
-            -----------------------------------------------
-            """;
+            -----------------------------------------------""";
 
     protected static final String OPTION_MENU = """
             What would you like to do?
             -----------------------------------------------
             1. Return to the Admin Menu
             2. Return to the Main Menu
-            3. EXIT
-            """;
+            3. EXIT""";
 
     public static void showAdminMenu() {
         System.out.println(ADMIN_MENU);
-        while (flag) {
-            try {
-                int userInput = Integer.parseInt(scanner.nextLine());
-                switch (userInput) {
-                    case 1 -> seeAllCustomers();        // 1. See all Customers
-                    case 2 -> seeAllRooms();            // 2. See all Rooms
-                    case 3 -> seeAllReservations();     // 3. See all Reservations
-                    case 4 -> addRoom();                // 4. Add a Room
-                    case 5 -> MainMenu.showMainMenu();  // 5. Return to Main Menu
-                    case 6 -> flag = false;               // 6. Exit App
-                    default -> throw new IllegalArgumentException("Input not valid: " + userInput);
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Only numbers accepted.");
-            } catch (Throwable e) {
-                System.out.println(e.getMessage());
+        try {
+            int userInput = Integer.parseInt(scanner.nextLine());
+            switch (userInput) {
+                case 1 -> seeAllCustomers();        // 1. See all Customers
+                case 2 -> seeAllRooms();            // 2. See all Rooms
+                case 3 -> seeAllReservations();     // 3. See all Reservations
+                case 4 -> addRoom();                // 4. Add a Room
+                case 5 -> MainMenu.showMainMenu();  // 5. Return to Main Menu
+                case 6 -> flag = false;               // 6. Exit App
+                default -> throw new IllegalArgumentException("Input not valid: " + userInput);
             }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Only numbers accepted.");
+        } catch (Throwable e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -106,7 +101,7 @@ public class AdminMenu {
     private static void addRoom() {
         List<IRoom> rooms = new LinkedList<>();
 
-        while (!flag) {
+        while (flag) {
             IRoom room;
 
             //Room Number
@@ -140,9 +135,9 @@ public class AdminMenu {
             boolean hasRoomType = false;
             while (!hasRoomType) {
                 System.out.println(ROOM_TYPE_MENU);
+                int userInput = Integer.parseInt(scanner.nextLine());
+                hasRoomType = (userInput == 1 || userInput == 2);
                 try {
-                    int userInput = Integer.parseInt(scanner.nextLine());
-                    hasRoomType = (userInput == 1 || userInput == 2);
                     if (hasRoomType) {
                         switch (userInput) {
                             case 1 -> roomType = RoomType.SINGLE;
@@ -152,18 +147,16 @@ public class AdminMenu {
                     }
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid input. Select 1 or 2.");
-                } catch (Throwable e) {
-                    System.out.println(e.getMessage());
                 }
             }
 
             String roomNumberString = String.valueOf(roomNumber);
             room = new Room(roomNumberString, price, roomType);
             rooms.add(room);
-            System.out.println("Success! Room " + roomNumberString + "was created.");
+            System.out.println("Success! Room " + roomNumberString + " was created.");
             takeABreak();
-            System.out.println("Would you like to add another room? (Y(es)/N(o))");
-            String answer = scanner.next().substring(0,1).toLowerCase();
+            System.out.println("Would you like to add another room? (Y(es) or N(o))");
+            String answer = scanner.next().toLowerCase();
             try {
                 switch (answer) {
                     case "y":
