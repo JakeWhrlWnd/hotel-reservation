@@ -94,6 +94,11 @@ public class Reservation {
     }
 
     @Override
+    public String toString() {
+        return "Customer: " + customer + "\nRoom: " + room + "\nCheck-in: " + checkInDate + "\nCheck-out: " + checkOutDate;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -104,10 +109,5 @@ public class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(customer, room, checkInDate, checkOutDate);
-    }
-
-    @Override
-    public String toString() {
-        return "Customer: " + customer + "\nRoom: " + room + "\nCheck-in: " + checkInDate + "\nCheck-out: " + checkOutDate;
     }
 }

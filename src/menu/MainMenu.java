@@ -15,17 +15,20 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static api.HotelResource.findARoom;
+import static api.HotelResource.getCustomer;
 
 public class MainMenu {
+    private static final Scanner scanner = new Scanner(System.in);
+    protected static boolean flag = true;
     // Main Menu constant
     protected static final String MAIN_MENU_TEXT = """
-            Welcome to the Hotel Reservation Application
+            MAIN MENU
             -----------------------------------------------
             1. Find and Reserve a room
             2. See my reservations
             3. Create an account
             4. Admin
-            5. Exit
+            5. EXIT
             -----------------------------------------------
             Please choose an option from the menu""";
     /**
@@ -38,7 +41,7 @@ public class MainMenu {
             1. Reserve a room
             2. Enter new dates
             3. Return to the main menu
-            4. Exit
+            4. EXIT
             -----------------------------------------------
             Please choose an option from the menu""";
     /**
@@ -51,7 +54,7 @@ public class MainMenu {
             1. Login to account
             2. Create a new account
             3. Return to the main menu
-            4. Exit
+            4. EXIT
             -----------------------------------------------
             Please choose an option from the menu""";
     /**
@@ -62,14 +65,12 @@ public class MainMenu {
             What would you like to do?
             -----------------------------------------------
             1. Return to the main menu
-            2. Exit
+            2. EXIT
             -----------------------------------------------
             Please choose an option from the menu""";
 
-    private static final Scanner scanner = new Scanner(System.in); // Scanner create for input
-
     private static final Date today = new Date();
-    private static final Date oneYearFromToday = Date.from(localDate.now().plusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    private static final Date oneYearFromToday = Date.from(LocalDate.now().plusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
     protected static final String DATE_FORMAT = "MM/dd/yyyy";
     private static Date checkInDate;
     public static Date getCheckInDate() {
@@ -109,51 +110,105 @@ public class MainMenu {
         }
     }
 
-    private static void findAndReserveARoom() {}
+    private static void findAndReserveARoom() {
+        boolean isReserved = false;
 
-    private static void getCustomerReservations() {}
+        while (!isReserved) {
+            Collection<IRoom> availableRooms = findARoom();
+
+            Map<Integer, IRoom> roomCount = new HashMap<>();
+            int item = 1;
+            for (IRoom room : availableRooms) {
+                roomCount.put(item, room);
+                item++;
+            }
+
+            int numberOfRooms = roomCount.size();
+
+            while (availableRooms.isEmpty()) {
+                Calendar calendar = Calendar.getInstance();
+
+                calendar.setTime(checkInDate);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                Date newCheckInDate = Date.from(calendar.toInstant());
+
+                calendar.setTime(checkOutDate);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                Date newCheckOutDate = Date.from(calendar.toInstant());
+
+                availableRooms = HotelResource.findARoom(newCheckInDate, newCheckOutDate);
+
+                System.out.println("There are no available rooms from "
+                        + standardDate.format(checkInDate) + " to " + standardDate.format(checkOutDate));
+                System.out.println("We suggest you try booking rooms from "
+                        + standardDate.format(newCheckInDate) + " to " + standardDate.format(newCheckOutDate));
+            }
+
+            int option;
+
+            for (Map.Entry entry : roomCount.entrySet()) {
+                System.out.println(entry);
+            }
+
+        }
+    }
+
+    private static void getCustomerReservations(String email) {
+        if (customer == null) {
+            loginOrCreateAccount();
+        }
+        Collection<Reservation> reservations = HotelResource.getCustomerReservation(email);
+        if (reservations == null) {
+            System.out.println("No reservations found for this account.");
+            takeABreak();
+            System.out.println(OPTIONS_MENU_3);
+            try {
+                int userInput = Integer.parseInt(scanner.nextLine());
+                switch (userInput) {
+                    case 1 -> MainMenu.showMainMenu();   // 1. Return to Main Menu
+                    case 2 -> flag = false;              // 2. Exit application
+                    default -> throw new IllegalArgumentException("Invalid input. Please, enter a number between 1 and 5.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Only numbers accepted.");
+            } catch (Throwable e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            for (Reservation reservation : reservations) {
+                System.out.println(reservation);
+            }
+        }
+    }
 
     private static void createAnAccount() {
         String email = "";
         String firstName = "";
         String lastName = "";
+        boolean emailIsValid = false;
 
-        while (!flag){
-            // Validate First Name
-            System.out.println("""
-                Please, enter your First name:
-                (Must begin with a capital letter)
-                """);
-            try {
-                firstName = scanner.nextLine();
-            } catch (InputMismatchException e) {
-                System.out.println("Name must begin with a capital letter.");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Name must consist of letters.");
-            }
+        System.out.println("""
+            Please, enter your First name:
+            (Must begin with a capital letter)
+            """);
+        firstName = scanner.nextLine();
 
-            // Validate Last Name
-            System.out.println("""
-                Please, enter your Last name:
-                (Must begin with a capital letter)
-                """);
-            try {
-                lastName = scanner.nextLine();
-            } catch (InputMismatchException e) {
-                System.out.println("Name must begin with a capital letter.");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Name must consist of letters.");
-            }
+        System.out.println("""
+            Please, enter your Last name:
+            (Must begin with a capital letter)
+            """);
+        lastName = scanner.nextLine();
 
-            // Validate Email
-            System.out.println("""
-                Please, enter your Email:
-                (Format must be - name@domain.com
-                """);
+        // Validate Email
+        while (!emailIsValid) {
             try {
+                System.out.println("""
+            Please, enter your Email:
+            (Format must be - name@domain.com
+            """);
                 email = scanner.nextLine();
                 HotelResource.createACustomer(firstName, lastName, email);
-                flag = true;
+                emailIsValid = true;
             } catch (IllegalArgumentException e) {
                 System.out.println("Email format must be - name@domain.com");
             }
@@ -170,11 +225,16 @@ public class MainMenu {
             throw new RuntimeException(e);
         }
     }
-    protected static boolean flag = true;
-
     private static Customer customer;
-
+    public static Customer getCustomer() {
+        return customer;
+    }
     public static void setCustomer(Customer customer) {
         MainMenu.customer = customer;
+    }
+    public static void exitApp() {
+        System.out.println("Goodbye and have a great day!");
+        scanner.close();
+        System.exit(0);
     }
 }

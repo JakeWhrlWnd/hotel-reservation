@@ -13,9 +13,6 @@ public class Customer {
     private String lastName; // Represents the Customer's lastName
     private String email; // Represents the Customer's email
 
-    public static final String EMAIL_REGEX = "^(.+)@(.+).com$"; // Constant Regular expression used to validate email
-    public static final String NAME_REGEX = "^[A-Z]('.-)[a-z]*$"; // Constant Regular expression used to validate first and last names
-
     /**
      * Constructor for the Customer Class
      * Creates a customer with a first name, last name, and an email
@@ -24,25 +21,14 @@ public class Customer {
      * @param email     string, the customer's email
      */
     public Customer(String firstName, String lastName, String email) {
-        Pattern namePattern = Pattern.compile(NAME_REGEX);
+        // Constant Regular expression used to validate email
+        String EMAIL_REGEX = "^(.+)@(.+).com$";
         Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
-
-        if (!namePattern.matcher(firstName).matches()) {
-            throw new IllegalArgumentException ("Name is not valid. Name must begin with a capital latter.");
-        }
-
         this.firstName = firstName;
-
-        if (!namePattern.matcher(lastName).matches()) {
-            throw new IllegalArgumentException ("Name is not valid. Name must begin with a capital latter.");
-        }
-
         this.lastName = lastName;
-
         if (!emailPattern.matcher(email).matches()) {
             throw new IllegalArgumentException ("Email is not valid. Format must be name@domain.com");
         }
-
         this.email = email;
     }
 

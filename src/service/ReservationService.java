@@ -5,7 +5,6 @@ import model.IRoom;
 import model.Reservation;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ReservationService {
 
@@ -19,9 +18,12 @@ public class ReservationService {
         return reservationService;
     }
 
-    private static final int DEFAULT_PLUS_DAYS = 7;
-    private final Map<String, List<Reservation>> reservations = new HashMap<>();
+    private final Map<String, Collection<Reservation>> reservations = new HashMap<>();
     private final Map<String, IRoom> rooms = new HashMap<>();
+
+    public Map<String, IRoom> getRoomList() {
+        return rooms;
+    }
 
     public void addRoom(IRoom room) {
         if (rooms.containsKey(room.getRoomNumber())) {
@@ -39,32 +41,65 @@ public class ReservationService {
         }
     }
 
-    public Map<String, IRoom> getAllRooms() {
-        return rooms;
+    public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
+        Reservation reservation = new Reservation(customer, room, checkInDate, checkOutDate);
+
+        Collection<Reservation> reservations = getCustomerReservation(customer);
+
+        if (Objects.isNull(reservations)) {
+            reservations = new LinkedList<>();
+        }
+
+        reservations.add(reservation);
+        this.reservations.put(customer.getEmail(), reservations);
+
+        return reservation;
     }
 
-    public Collection<Reservation> getCustomerReservation(String email) {
-        return reservations.get(email);
+    public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate) {
+        Collection<IRoom> availableRooms = new LinkedList<>();
+        Collection<IRoom> unavailableRooms = findUnavailableRooms(checkInDate, checkOutDate);
+
+        for (IRoom room : rooms.values()) {
+            if (!unavailableRooms.contains(room)) {
+                availableRooms.add(room);
+            }
+        }
+        return availableRooms;
     }
 
-    public Map<String, List<Reservation>> getAllReservations() {
-        return reservations;
+    public Collection<IRoom> findUnavailableRooms(Date checkInDate, Date checkOutDate) {
+        Collection<Reservation> allReservations = getAllReservations();
+        Collection<IRoom> unavailableRooms = new LinkedList<>();
+
+        for (Reservation reservation : allReservations) {
+            if ((checkInDate.after(reservation.getCheckInDate()) ||
+                    checkInDate.equals(reservation.getCheckInDate())) &&
+                    checkOutDate.before(reservation.getCheckOutDate()) ||
+                    checkOutDate.equals(reservation.getCheckOutDate())) {
+                unavailableRooms.add(reservation.getRoom());
+            }
+        }
+        return unavailableRooms;
     }
 
-    void addReservation(Reservation reservation) {
-        reservations.put(reservation.getCustomer().getEmail(), List.of(reservation));
+    private Collection<Reservation> getAllReservations() {
+        Collection<Reservation> allReservations = new LinkedList<>();
+        reservations.values().forEach(allReservations::addAll);
+        return allReservations;
     }
 
-    public void reserveARoom(Reservation reservation) {
-        final String customerEmail = reservation.getCustomer().getEmail();
-        List<Reservation> customerReservations = reservations.get(customerEmail);
+    public Collection<Reservation> getCustomerReservation(Customer customer) {
+        return reservations.get(customer.getEmail());
+    }
 
-        if (customerReservations == null) {
-            List<Reservation> list = new ArrayList<>();
-            list.add(reservation);
-            reservations.put(customerEmail, list);
+    public void printAllReservation() {
+        Collection<Reservation> reservations = getAllReservations();
+
+        if (reservations.isEmpty()) {
+            System.out.println("Unfortunately, no reservations were found.");
         } else {
-            customerReservations.add(reservation);
+            reservations.forEach(System.out::println);
         }
     }
 }

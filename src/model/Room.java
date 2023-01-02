@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,6 +14,8 @@ public class Room implements IRoom{
     private String roomNumber; // Represents the Room number
     private Double price; // Represents the Room price
     private RoomType enumeration; // Represents the Room type - Single or Double
+
+    private List<Pair<Date, Date>> bookedDates = new ArrayList<>();
 
     /**
      * Constructor for the Room Class
@@ -84,6 +89,15 @@ public class Room implements IRoom{
     }
 
     /**
+     * Overrides the getBookedDates method declared in IRoom interface
+     * @return Pairing of booked dates
+     */
+    @Override
+    public List<Pair<Date, Date>> getBookedDates() {
+        return bookedDates;
+    }
+
+    /**
      * Overrides the toString method
      * @return A better description of the Room attributes
      */
@@ -99,11 +113,11 @@ public class Room implements IRoom{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return Objects.equals(roomNumber, room.roomNumber) && Objects.equals(price, room.price) && enumeration == room.enumeration;
+        return roomNumber.equals(room.roomNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(roomNumber, price, enumeration);
+        return Objects.hash(roomNumber);
     }
 }
