@@ -23,13 +23,7 @@ public class HotelResource {
     }
 
     public static void createACustomer(String firstName, String lastName, String email) {
-        try {
-            customerService.addCustomer(firstName, lastName, email);
-        } catch (IllegalArgumentException e) {
-            System.out.println("""
-                    Email is not valid.
-                    Please, create an account with a valid email.""");
-        }
+        customerService.addCustomer(firstName, lastName, email);
     }
 
     public static IRoom getARoom(String roomNumber) {

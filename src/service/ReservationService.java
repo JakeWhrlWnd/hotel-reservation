@@ -26,19 +26,11 @@ public class ReservationService {
     }
 
     public void addRoom(IRoom room) {
-        if (rooms.containsKey(room.getRoomNumber())) {
-            throw new IllegalArgumentException("This room already exist.");
-        } else {
-            rooms.put(room.getRoomNumber(), room);
-        }
+        rooms.put(room.getRoomNumber(), room);
     }
 
     public IRoom getARoom(String roomNumber) {
-        if (rooms.containsKey(roomNumber)){
-            return rooms.get(roomNumber);
-        } else {
-            throw new IllegalArgumentException("This room does not exist.");
-        }
+        return rooms.get(roomNumber);
     }
 
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {

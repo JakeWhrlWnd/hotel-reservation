@@ -272,40 +272,31 @@ public class MainMenu {
     }
 
     private static void createAnAccount() {
-        String email = "";
-        String firstName;
-        String lastName;
-        boolean emailIsValid = false;
-
         System.out.println("""
             Please, enter your First name:
-            (Must begin with a capital letter)
-            """);
-        firstName = scanner.nextLine();
+            (Must begin with a capital letter)""");
+        String firstName = scanner.nextLine();
 
         System.out.println("""
             Please, enter your Last name:
-            (Must begin with a capital letter)
-            """);
-        lastName = scanner.nextLine();
+            (Must begin with a capital letter)""");
+        String lastName = scanner.nextLine();
 
-        // Validate Email
-        while (!emailIsValid) {
-            try {
-                System.out.println("""
+        System.out.println("""
             Please, enter your Email:
-            (Format must be - name@domain.com
-            """);
-                email = scanner.next();
-                HotelResource.createACustomer(firstName, lastName, email);
-                emailIsValid = true;
-            } catch (IllegalArgumentException e) {
-                System.out.println("Email format must be - name@domain.com");
-            }
+            (Format must be - name@domain.com""");
+        String email = scanner.nextLine();
+
+        try {
+            HotelResource.createACustomer(email, firstName, lastName);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            createAnAccount();
         }
 
-        setCustomer(HotelResource.getCustomer(email));
-        System.out.println("Account creation successful. Welcome " + getCustomer().getFirstName() + "!");
+        System.out.println("Account creation successful. Welcome " + firstName + "!");
+        takeABreak();
+        showExitMenu();
     }
 
     public static void loginToAccount() {
