@@ -5,8 +5,10 @@ import model.*;
 
 import java.util.*;
 
+import static menu.MainMenu.takeABreak;
+
 public class AdminMenu {
-    private static Collection<Customer> allCustomers = AdminResource.getAllCustomers();
+    private static final AdminResource adminResource = AdminResource.getInstance();
     private static final Scanner scanner = new Scanner(System.in);
     protected static boolean flag = true;
     protected static final String ADMIN_MENU = """
@@ -87,8 +89,17 @@ public class AdminMenu {
 
     // Option #1
     private static void seeAllCustomers() {
-        for (Customer customer: allCustomers) {
-            System.out.println(customer);
+        int count = 0;
+        Collection<Customer> customers = adminResource.getAllCustomers();
+        if (customers.isEmpty()) {
+            System.out.println("No customers were found.");
+        } else {
+            for (Customer customer: customers) {
+                count++;
+                System.out.println("("+ count +")");
+                System.out.println("First name: " + customer.getFirstName()
+                        + "\n Last name: " + customer.getLastName()
+                        + "\n Email: " + customer.getEmail() + "\n");
         }
         takeABreak();
         showOptionMenu();
