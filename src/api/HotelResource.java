@@ -26,7 +26,7 @@ public class HotelResource {
         customerService.addCustomer(firstName, lastName, email);
     }
 
-    public static IRoom getARoom(String roomNumber) {
+    public static IRoom getRoom(String roomNumber) {
         return reservationService.getARoom(roomNumber);
     }
 
@@ -35,12 +35,20 @@ public class HotelResource {
         return reservationService.reserveARoom(customer, room, checkInDate, checkOutDate);
     }
 
-    public static Collection<Reservation> getCustomerReservation(String customerEmail) {
+    public static Collection<Reservation> getCustomerReservations(String customerEmail) {
         Customer customer = getCustomer(customerEmail);
-        return reservationService.getCustomerReservation(customer);
+        if (customer == null) {
+            return Collections.emptyList();
+        } else {
+            return reservationService.getCustomerReservation(customer);
+        }
     }
 
     public static Collection<IRoom> findARoom(Date checkIn, Date checkOut) {
         return reservationService.findRooms(checkIn, checkOut);
+    }
+
+    public Collection<IRoom> findAlternativeRooms(final Date checkIn, final Date checkOut) {
+        return reservationService.findRecommendedRooms(checkIn, checkOut);
     }
 }
