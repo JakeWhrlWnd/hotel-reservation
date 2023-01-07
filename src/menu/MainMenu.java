@@ -1,19 +1,17 @@
 package menu;
 
 import api.HotelResource;
-import model.Customer;
 import model.IRoom;
 import model.Reservation;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
+
 import java.util.*;
 
 public class MainMenu {
     private static final Scanner scanner = new Scanner(System.in);
-    private static String RESPONSE_REGEX = "^[YNyn]$";
+    private static final String RESPONSE_REGEX = "^[YNyn]$";
     protected static boolean flag = true;
     // Main Menu constant
     protected static final String MAIN_MENU_TEXT = """
@@ -33,8 +31,8 @@ public class MainMenu {
             try {
                 int userInput = Integer.parseInt(scanner.nextLine());
                 switch (userInput) {
-                    case 1 -> findAndReserveRoom();            // 1. Find and reserve a room
-                    case 2 -> getCustomerReservation(); // 2. See my reservations
+                    case 1 -> findAndReserveRoom();      // 1. Find and reserve a room
+                    case 2 -> getCustomerReservation();  // 2. See my reservations
                     case 3 -> createAnAccount();         // 3. Create an account
                     case 4 -> AdminMenu.showAdminMenu(); // 4. Open the Admin Menu
                     case 5 -> flag = false;              // 5. Exit application
@@ -56,9 +54,8 @@ public class MainMenu {
             What would you like to do?
             -----------------------------------------------
             1. Reserve a room
-            2. Enter new dates
-            3. Return to the main menu
-            4. EXIT
+            2. Return to the main menu
+            3. EXIT
             -----------------------------------------------
             Please choose an option from the menu""";
 
@@ -68,10 +65,9 @@ public class MainMenu {
             try {
                 int userInput = Integer.parseInt(scanner.nextLine());
                 switch (userInput) {
-                    case 1 -> reserveARoom();            // 1. Reserve a room
-                    case 2 -> findARoom();               // 2. Enter check-in and check-out dates
-                    case 3 -> MainMenu.showMainMenu();   // 3. Return to Main Menu
-                    case 4 -> flag = false;              // 4. Exit application
+                    case 1 -> findAndReserveRoom();      // 1. Reserve a room
+                    case 2 -> MainMenu.showMainMenu();   // 2. Return to Main Menu
+                    case 3 -> flag = false;              // 3. Exit application
                     default -> throw new IllegalArgumentException("Invalid input. Please, enter a number between 1 and 4.");
                 }
             } catch (NumberFormatException e) {
@@ -101,9 +97,9 @@ public class MainMenu {
             try {
                 int userInput = Integer.parseInt(scanner.nextLine());
                 switch (userInput) {
-                    case 1 -> createAnAccount();         // 2. Create a new account
-                    case 2 -> MainMenu.showMainMenu();   // 3. Return to Main Menu
-                    case 3 -> flag = false;              // 4. Exit application
+                    case 1 -> createAnAccount();         // 1. Create a new account
+                    case 2 -> MainMenu.showMainMenu();   // 2. Return to Main Menu
+                    case 3 -> flag = false;              // 3. Exit application
                     default -> throw new IllegalArgumentException("Invalid input. Please, enter a number between 1 and 4.");
                 }
             } catch (NumberFormatException e) {
@@ -250,7 +246,7 @@ public class MainMenu {
                         break;
                     }
                 }
-                if (roomAvailable == "false") {
+                if (roomAvailable.equals("false")) {
                     System.out.println("Unfortunately, room is not available.");
                 }
                 showExitMenu();
@@ -261,20 +257,25 @@ public class MainMenu {
         }
     }
 
-    private static void getCustomerReservation(String email) {
-        if (customer == null) {
-            showAccountMenu();
-        }
-        Collection<Reservation> reservations = HotelResource.getCustomerReservation(email);
-        if (reservations == null) {
-            System.out.println("No reservations found for this account.");
-            takeABreak();
-            showExitMenu();
+    private static void getCustomerReservation() {
+        System.out.println("Please, enter your email. (format: name@domain.com)");
+        final String customerEmail = scanner.nextLine();
+        int count = 0;
+        if (HotelResource.getCustomerReservations(customerEmail) == null || HotelResource.getCustomerReservations(customerEmail).isEmpty()) {
+            System.out.println("Sorry, no reservations found for email: " + customerEmail);
         } else {
-            for (Reservation reservation : reservations) {
-                System.out.println(reservation);
+            for (Reservation reservation : HotelResource.getCustomerReservations(customerEmail)) {
+                count++;
+                System.out.println("Reservation(" + count +")");
+                System.out.println("Customer: " + reservation.getCustomer().getFirstName() + " " + reservation.getCustomer().getLastName());
+                System.out.println("Room: " + reservation.getRoom().getRoomNumber()
+                        + "\nRoom type: " + reservation.getRoom().getRoomType()
+                        + "\nPrice per night: " + reservation.getRoom().getRoomPrice());
+                System.out.println("Check-in date: " + reservation.getCheckInDate());
+                System.out.println("Checkout date: " + reservation.getCheckOutDate());
             }
         }
+        showExitMenu();
     }
 
     private static void createAnAccount() {
