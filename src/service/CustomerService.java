@@ -5,7 +5,11 @@ import model.Customer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Customer Service class
+ * 
+ * @author James Norris
+ */
 public class CustomerService {
     /**
      * Singleton Pattern for CustomerService Class

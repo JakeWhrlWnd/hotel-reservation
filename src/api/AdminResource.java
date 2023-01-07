@@ -6,7 +6,11 @@ import service.ReservationService;
 
 import java.util.Collection;
 import java.util.List;
-
+/**
+ * Admin resource api
+ *
+ * @author James Norris
+ */
 public class AdminResource {
     private static final AdminResource adminResource = new AdminResource();
     private AdminResource() {}

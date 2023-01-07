@@ -7,7 +7,11 @@ import service.CustomerService;
 import service.ReservationService;
 
 import java.util.*;
-
+/**
+ * Hotel resource api
+ *
+ * @author James Norris
+ */
 public class HotelResource {
     private static final HotelResource hotelResource = new HotelResource();
     private HotelResource() {}

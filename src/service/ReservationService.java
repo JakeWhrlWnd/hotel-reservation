@@ -5,7 +5,11 @@ import model.IRoom;
 import model.Reservation;
 
 import java.util.*;
-
+/**
+ * Reservation Service class
+ *
+ * @author James Norris
+ */
 public class ReservationService {
 
     /**

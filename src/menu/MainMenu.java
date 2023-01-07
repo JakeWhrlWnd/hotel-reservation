@@ -249,6 +249,7 @@ public class MainMenu {
                 if (roomAvailable.equals("false")) {
                     System.out.println("Unfortunately, room is not available.");
                 }
+                takeABreak();
                 showExitMenu();
             }
         } else {
@@ -275,6 +276,7 @@ public class MainMenu {
                 System.out.println("Checkout date: " + reservation.getCheckOutDate());
             }
         }
+        takeABreak();
         showExitMenu();
     }
 
