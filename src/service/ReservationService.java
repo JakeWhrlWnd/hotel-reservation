@@ -28,7 +28,7 @@ public class ReservationService {
     public Map<String, IRoom> additionalRooms = new HashMap<>();
 
     private static final int additionalDays = 7;
-    public Date addAdditionalDays(Date date) {
+    Date addAdditionalDays(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.DATE, additionalDays);
